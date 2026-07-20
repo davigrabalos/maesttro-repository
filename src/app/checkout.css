@@ -1,0 +1,34 @@
+/* Checkout Layout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.checkout-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-right {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "right"
+      "left";
+  }
+  .checkout-right {
+    grid-area: right;
+  }
+  .checkout-left {
+    grid-area: left;
+  }
+}
