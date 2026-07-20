@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: "Checkout de alta conversão",
   icons: {
     icon: "/images/ICON.png",
+    shortcut: "/images/ICON.png",
+    apple: "/images/ICON.png",
   },
 };
 
@@ -16,6 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <link rel="icon" href="/images/ICON.png" type="image/png" />
+      </head>
       <body>{children}</body>
     </html>
   );
