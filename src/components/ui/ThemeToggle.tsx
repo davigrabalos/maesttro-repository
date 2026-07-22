@@ -41,7 +41,7 @@ export function ThemeToggle() {
         backgroundColor: 'var(--md-surface)',
         color: 'var(--md-on-surface)',
         border: '1px solid var(--md-border)',
-        borderRadius: '20px',
+        borderRadius: '0px',
         fontSize: '12px',
         fontWeight: 600,
         cursor: 'pointer',

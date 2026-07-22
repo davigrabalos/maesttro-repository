@@ -61,7 +61,7 @@ export function PaymentMethodSelector({ orderId }: PaymentMethodSelectorProps) {
   ];
 
   return (
-    <div style={{ marginTop: '32px' }}>
+    <div className="md-card-group">
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
         <span className="material-symbols-outlined" style={{ color: 'var(--md-primary)' }}>payments</span>
@@ -88,13 +88,14 @@ export function PaymentMethodSelector({ orderId }: PaymentMethodSelectorProps) {
               justifyContent: 'center',
               gap: '8px',
               padding: '14px 16px',
+              minHeight: '52px',
               border: 'none',
               borderLeft: idx > 0 ? '1px solid var(--md-border)' : 'none',
               backgroundColor: selected === method.id ? 'var(--md-primary)' : 'var(--md-surface)',
               color: selected === method.id ? '#FFFFFF' : 'var(--md-on-surface)',
               cursor: 'pointer',
               fontFamily: 'inherit',
-              fontSize: '13px',
+              fontSize: '14px',
               fontWeight: selected === method.id ? '600' : '400',
               transition: 'background-color 0.2s ease, color 0.2s ease',
             }}
@@ -186,11 +187,13 @@ export function PaymentMethodSelector({ orderId }: PaymentMethodSelectorProps) {
                   alignItems: 'center',
                   gap: '8px',
                   padding: '10px 14px',
+                  minHeight: '48px',
                   border: '1px solid var(--md-border)',
                   backgroundColor: 'var(--md-surface)',
                   cursor: 'pointer',
-                  fontSize: '13px',
+                  fontSize: '14px',
                   color: 'var(--md-text-secondary)',
+                  borderRadius: '0px',
                 }}>
                   <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>upload_file</span>
                   <span>{file ? file.name : 'Selecionar arquivo (imagem ou PDF)'}</span>

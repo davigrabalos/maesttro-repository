@@ -56,7 +56,7 @@ export function ConfirmacaoStatusClient({ orderId, initialStatus, initialOrder }
   const isPaid = status === 'paid';
 
   return (
-    <div style={{ backgroundColor: 'var(--md-surface)', border: '1px solid var(--md-border)', overflow: 'hidden', borderRadius: '8px' }}>
+    <div style={{ backgroundColor: 'var(--md-surface)', border: '1px solid var(--md-border)', overflow: 'hidden', borderRadius: '0px' }}>
       
       {/* Header (Dinâmico) */}
       <div style={{
@@ -84,7 +84,7 @@ export function ConfirmacaoStatusClient({ orderId, initialStatus, initialOrder }
           {isPaid && (
             <div style={{
               backgroundColor: '#ECFDF5', border: '1px solid #10B981', padding: '16px',
-              borderRadius: '8px', marginBottom: '20px', textAlign: 'center'
+              borderRadius: '0px', marginBottom: '20px', textAlign: 'center'
             }}>
               <h3 style={{ margin: '0 0 6px 0', color: '#065F46', fontSize: '15px' }}>🚀 Produto Liberado!</h3>
               <p style={{ margin: 0, fontSize: '12px', color: '#047857' }}>
@@ -94,7 +94,7 @@ export function ConfirmacaoStatusClient({ orderId, initialStatus, initialOrder }
                 onClick={triggerConfetti}
                 style={{
                   marginTop: '12px', padding: '8px 16px', backgroundColor: '#10B981', color: '#fff',
-                  border: 'none', borderRadius: '4px', fontWeight: 700, fontSize: '12px', cursor: 'pointer'
+                  border: 'none', borderRadius: '0px', fontWeight: 700, fontSize: '12px', cursor: 'pointer'
                 }}
               >
                 Comemorar Novamente! 🥳
@@ -103,7 +103,7 @@ export function ConfirmacaoStatusClient({ orderId, initialStatus, initialOrder }
           )}
 
           {/* ID do Pedido */}
-          <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: 'var(--md-primary-light)', border: '1px solid var(--md-border)', borderRadius: '6px' }}>
+          <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: 'var(--md-primary-light)', border: '1px solid var(--md-border)', borderRadius: '0px' }}>
             <p style={{ fontSize: '11px', color: 'var(--md-text-secondary)', marginBottom: '4px' }}>Número do Pedido</p>
             <p style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--md-primary)', fontWeight: '700', margin: 0 }}>
               #{order.id.toUpperCase()}
@@ -113,7 +113,7 @@ export function ConfirmacaoStatusClient({ orderId, initialStatus, initialOrder }
           {/* Status Box */}
           <div className={isPaid ? 'status-badge status-paid' : 'status-badge status-pending'} style={{
             padding: '12px 16px',
-            borderRadius: '6px',
+            borderRadius: '0px',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',

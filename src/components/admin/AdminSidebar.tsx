@@ -53,7 +53,7 @@ export function AdminSidebar({ activeTab, onTabChange, onNotesToggle }: AdminSid
       {/* Logo */}
       <div className="sidebar-logo">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/ICONLOGO.png" alt="Maesttro" className="sidebar-logo-icon" />
+        <img src="/images/icon.png" alt="Maesttro" className="sidebar-logo-icon" />
         <span className="sidebar-logo-text">Admin</span>
       </div>
 

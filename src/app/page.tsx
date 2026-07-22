@@ -10,7 +10,7 @@ export default function HomePage() {
       <nav className="home-navbar">
         <div className="home-navbar-logo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/LOGO+TYPO.png" alt="Maesttro" />
+          <img src="/images/icon.png" alt="Maesttro" />
         </div>
         <div className="home-navbar-links">
           <a href="/admin" className="nav-link-login">
@@ -161,7 +161,7 @@ export default function HomePage() {
           <div className="hero-visual">
              <div style={{ 
                width: '100%', maxWidth: '400px', backgroundColor: 'var(--md-surface)', 
-               padding: '24px', boxShadow: '20px 20px 0px rgba(0,0,0,0.3)' 
+               padding: '24px', border: '1px solid var(--md-border)', boxShadow: 'none' 
              }}>
                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid var(--md-border)', paddingBottom: '16px', marginBottom: '16px' }}>
                  <div style={{ color: 'var(--md-text-secondary)', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>Pedidos Recentes</div>

@@ -54,28 +54,30 @@ export function CheckoutForm({ source, checkoutId, onOrderCreated }: { source: s
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Dados Pessoais */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-        <span className="material-symbols-outlined" style={{ color: 'var(--md-primary)' }}>person</span>
-        <h2>Dados Pessoais</h2>
-      </div>
+      {/* Dados Pessoais - Grouped by Law of Proximity */}
+      <div className="md-card-group">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+          <span className="material-symbols-outlined" style={{ color: 'var(--md-primary)' }}>person</span>
+          <h2 style={{ fontSize: '18px', margin: 0 }}>Dados Pessoais</h2>
+        </div>
 
-      <Input
-        label="E-mail"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        disabled={orderCreated}
-      />
-      <Input
-        label="Telefone / WhatsApp"
-        type="tel"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        required
-        disabled={orderCreated}
-      />
+        <Input
+          label="E-mail"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          disabled={orderCreated}
+        />
+        <Input
+          label="Telefone / WhatsApp"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+          disabled={orderCreated}
+        />
+      </div>
 
       {/* Payment Method Selector (always visible) */}
       <div id="payment-section">
@@ -87,11 +89,11 @@ export function CheckoutForm({ source, checkoutId, onOrderCreated }: { source: s
         <Button
           type="submit"
           variant="primary"
-          style={{ width: '100%', marginTop: '28px', gap: '8px' }}
+          style={{ width: '100%', marginTop: '12px', gap: '8px', minHeight: '52px', fontSize: '16px' }}
           disabled={loading}
         >
           <span className="material-symbols-outlined">{loading ? 'hourglass_empty' : 'lock'}</span>
-          <span>{loading ? 'Processando...' : 'Confirmar Pedido'}</span>
+          <span>{loading ? 'Processando...' : 'Finalizar Compra'}</span>
         </Button>
       )}
 

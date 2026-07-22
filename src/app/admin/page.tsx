@@ -208,7 +208,7 @@ export default function AdminPage() {
                 <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>payments</span>
                 Receita Confirmada
               </div>
-              <div className="admin-metric-value" style={{ color: 'var(--md-primary)' }}>{formatCurrency(totalRevenue)}</div>
+              <div className="admin-metric-value" style={{ color: 'var(--md-secondary)', fontWeight: 900 }}>{formatCurrency(totalRevenue)}</div>
               <div className="admin-metric-sub">{paidCount} pedidos pagos</div>
             </div>
             <div className="admin-metric-card">
@@ -250,13 +250,13 @@ export default function AdminPage() {
                     value={filterText}
                     onChange={(e) => setFilterText(e.target.value)}
                     placeholder="Pesquisar (Pix, e-mail...)"
-                    style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', color: 'var(--md-on-surface)', borderRadius: '4px' }}
+                    style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', color: 'var(--md-on-surface)', borderRadius: '0px' }}
                   />
                   <button
                     onClick={startVoiceSearch}
                     style={{
                       padding: '8px', backgroundColor: isListening ? '#EF4444' : 'var(--md-surface)',
-                      border: '1px solid var(--md-border)', borderRadius: '4px',
+                      border: '1px solid var(--md-border)', borderRadius: '0px',
                       color: isListening ? '#fff' : 'var(--md-text-secondary)', cursor: 'pointer',
                       display: 'flex', alignItems: 'center'
                     }}
@@ -321,7 +321,7 @@ export default function AdminPage() {
                               {hasProof ? (
                                 <span style={{
                                   display: 'inline-flex', alignItems: 'center', gap: '4px',
-                                  padding: '3px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700,
+                                  padding: '3px 8px', borderRadius: '0px', fontSize: '10px', fontWeight: 700,
                                   backgroundColor: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0'
                                 }}>
                                   <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>verified</span>
@@ -356,7 +356,7 @@ export default function AdminPage() {
                                     onClick={() => handleUpdateStatus(order.id, 'paid')}
                                     style={{
                                       padding: '4px 8px', backgroundColor: '#10B981', color: '#fff',
-                                      border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                                      border: 'none', borderRadius: '0px', fontSize: '11px', fontWeight: 700,
                                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
                                     }}
                                     title="Aprovar"
@@ -369,7 +369,7 @@ export default function AdminPage() {
                                     onClick={() => handleUpdateStatus(order.id, 'failed')}
                                     style={{
                                       padding: '4px 6px', backgroundColor: '#EF4444', color: '#fff',
-                                      border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                                      border: 'none', borderRadius: '0px', fontSize: '11px', fontWeight: 700,
                                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center'
                                     }}
                                     title="Rejeitar"

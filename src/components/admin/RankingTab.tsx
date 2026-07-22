@@ -43,7 +43,7 @@ export function RankingTab({ orders }: { orders: any[] }) {
                 backgroundColor: index < 3 ? getMedalColor(index) : 'var(--md-background)',
                 color: index < 3 ? '#fff' : 'var(--md-text-secondary)',
                 width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '50%', fontWeight: '700', fontSize: '14px'
+                borderRadius: '0px', fontWeight: '700', fontSize: '14px'
               }}>
                 {index + 1}
               </div>

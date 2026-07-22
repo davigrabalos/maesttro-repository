@@ -21,7 +21,7 @@
   overflow: hidden;
   z-index: 200;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 4px 0 24px rgba(91, 33, 182, 0.12);
+  box-shadow: none;
 }
 
 .admin-sidebar:hover {
@@ -43,7 +43,6 @@
   height: 28px;
   width: 28px;
   flex-shrink: 0;
-  filter: brightness(0) invert(1);
   object-fit: contain;
 }
 
@@ -75,7 +74,7 @@
 }
 .sidebar-nav::-webkit-scrollbar-thumb {
   background: rgba(255,255,255,0.15);
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 /* Nav Groups */
@@ -117,7 +116,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 20px;
+  padding: 14px 20px;
+  min-height: 48px;
   width: 100%;
   background: none;
   border: none;
@@ -194,8 +194,8 @@
   align-items: center;
   justify-content: flex-end;
   gap: 16px;
-  padding: 0 24px;
-  height: 48px;
+  padding: 0 64px;
+  height: 54px;
   background: var(--md-surface);
   border-bottom: 1px solid var(--md-border);
   flex-shrink: 0;
@@ -205,7 +205,7 @@
 }
 
 .admin-topbar-info {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--md-text-secondary);
 }
 
@@ -219,12 +219,13 @@
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Main Content Area */
+/* Main Content Area - Ampliado padding lateral */
 .admin-main {
   flex: 1;
-  padding: 32px 24px;
-  max-width: 1400px;
+  padding: 36px 64px;
+  max-width: 1600px;
   width: 100%;
+  font-size: 15px;
 }
 
 /* Old navbar kept for backward-compat but hidden */
@@ -232,39 +233,51 @@
   display: none;
 }
 
-/* Metrics Grid */
+/* Metrics Grid - Aproximados bastante (gap 8px) */
 .admin-metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 8px;
+  margin-bottom: 36px;
 }
 
 .admin-metric-card {
   background-color: var(--md-surface);
   border: 1px solid var(--md-border);
-  padding: 20px 24px;
+  padding: 24px 20px;
+  border-radius: 0;
+  box-shadow: none;
+  transition: border-color var(--md-transition-fast), background-color var(--md-transition-fast), transform var(--md-transition-fast);
+  cursor: pointer;
+}
+
+.admin-metric-card:hover {
+  border-color: var(--md-secondary);
+  background-color: var(--md-primary-light);
+  transform: translateY(-2px);
+  box-shadow: none;
 }
 
 .admin-metric-label {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--md-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .admin-metric-value {
-  font-size: 28px;
+  font-size: 36px;
   font-weight: 700;
   color: var(--md-on-surface);
   line-height: 1;
 }
 
 .admin-metric-sub {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--md-text-secondary);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 /* Section Header */
@@ -279,13 +292,15 @@
 .admin-table-wrapper {
   background-color: var(--md-surface);
   border: 1px solid var(--md-border);
+  border-radius: 0;
+  box-shadow: none;
   overflow-x: auto;
 }
 
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .admin-table thead {
@@ -294,10 +309,10 @@
 }
 
 .admin-table thead th {
-  padding: 12px 16px;
+  padding: 14px 18px;
   text-align: left;
-  font-weight: 600;
-  font-size: 11px;
+  font-weight: 700;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -305,17 +320,21 @@
 
 .admin-table tbody tr {
   border-bottom: 1px solid var(--md-border);
-  transition: background-color var(--md-transition-fast);
+  border-left: 3px solid transparent;
+  transition: background-color var(--md-transition-fast), border-left-color var(--md-transition-fast);
 }
 
 .admin-table tbody tr:hover {
   background-color: var(--md-primary-light);
+  border-left-color: var(--md-secondary);
+  cursor: pointer;
 }
 
 .admin-table tbody td {
-  padding: 12px 16px;
+  padding: 14px 18px;
   color: var(--md-on-surface);
   white-space: nowrap;
+  font-size: 14px;
 }
 
 /* Status Badges */
@@ -323,10 +342,16 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 10px;
-  font-size: 11px;
+  padding: 4px 12px;
+  font-size: 12px;
   font-weight: 600;
-  border-radius: 4px;
+  border-radius: 0;
+  transition: filter var(--md-transition-fast), transform var(--md-transition-fast);
+}
+
+.status-badge:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
 }
 
 .status-pending {
@@ -394,6 +419,14 @@
   background-color: var(--md-surface);
   border: 1px solid var(--md-border);
   padding: 20px;
+  transition: border-color var(--md-transition-fast), background-color var(--md-transition-fast), transform var(--md-transition-fast);
+}
+
+.admin-store-card:hover {
+  border-color: var(--md-secondary);
+  background-color: var(--md-primary-light);
+  transform: translateY(-2px);
+  cursor: pointer;
 }
 
 /* Proof Thumbnail */
@@ -402,9 +435,14 @@
   align-items: center;
   gap: 4px;
   color: var(--md-primary);
-  font-size: 11px;
+  font-size: 13px;
   text-decoration: underline;
   cursor: pointer;
+  transition: color var(--md-transition-fast);
+}
+
+.proof-link:hover {
+  color: var(--md-secondary);
 }
 
 /* Refresh button */
@@ -412,18 +450,21 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 8px 16px;
   background: none;
-  border: 1px solid var(--md-on-primary);
-  color: var(--md-on-primary);
+  border: 1px solid var(--md-border);
+  color: var(--md-on-surface);
   cursor: pointer;
   font-family: inherit;
-  font-size: 12px;
-  transition: background-color 0.15s;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color var(--md-transition-fast), border-color var(--md-transition-fast), color var(--md-transition-fast);
 }
 
 .admin-refresh-btn:hover {
-  background-color: rgba(255,255,255,0.1);
+  background-color: var(--md-primary-light);
+  border-color: var(--md-primary);
+  color: var(--md-primary);
 }
 
 /* Empty state */
@@ -431,7 +472,7 @@
   padding: 48px;
   text-align: center;
   color: var(--md-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 /* Responsive */
@@ -443,7 +484,7 @@
     padding: 0 16px;
   }
   .admin-main {
-    padding: 20px 12px;
+    padding: 20px 16px;
   }
 }
 
@@ -467,6 +508,11 @@
   background-color: var(--md-surface);
   border: 1px solid var(--md-border);
   padding: 24px;
+  transition: border-color var(--md-transition-fast);
+}
+
+.chart-card:hover {
+  border-color: var(--md-secondary);
 }
 
 .chart-title {
@@ -508,12 +554,12 @@
 .keep-toggle {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: 0;
   background-color: var(--md-primary);
   color: #fff;
-  border: none;
+  border: 1px solid var(--md-border);
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -528,9 +574,9 @@
   width: 300px;
   background-color: var(--md-surface);
   border: 1px solid var(--md-border);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  box-shadow: none;
   margin-bottom: 16px;
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
