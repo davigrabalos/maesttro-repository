@@ -6,6 +6,7 @@ import { ZYFinancasTab } from '../../components/admin/ZYFinancasTab';
 import { RankingTab } from '../../components/admin/RankingTab';
 import { CRMTab } from '../../components/admin/CRMTab';
 import { KeepNotes } from '../../components/admin/KeepNotes';
+import { ProofModal } from '../../components/admin/ProofModal';
 
 interface PixProof {
   id: string;
@@ -42,7 +43,7 @@ interface StoreData {
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; cls: string; icon: string }> = {
     pending:    { label: 'Aguardando',  cls: 'status-pending',    icon: 'hourglass_empty' },
-    processing: { label: 'Processando', cls: 'status-processing',  icon: 'sync' },
+    processing: { label: 'Em Análise',  cls: 'status-processing',  icon: 'sync' },
     paid:       { label: 'Pago',        cls: 'status-paid',        icon: 'check_circle' },
     failed:     { label: 'Falhou',      cls: 'status-failed',      icon: 'cancel' },
   };
@@ -71,11 +72,15 @@ export default function AdminPage() {
   const [stores, setStores] = useState<StoreData[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
-  const [activeTab, setActiveTab] = useState<'zyfinancas' | 'orders' | 'ranking' | 'crm'>('zyfinancas');
+  const [activeTab, setActiveTab] = useState<'zyfinancas' | 'orders' | 'ranking' | 'crm'>('orders');
   
   // Voice search & filter
   const [filterText, setFilterText] = useState('');
   const [isListening, setIsListening] = useState(false);
+
+  // Modal Proof State
+  const [selectedOrderForProof, setSelectedOrderForProof] = useState<Order | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -100,9 +105,32 @@ export default function AdminPage() {
     fetchData();
   }, [fetchData]);
 
+  // Update order status API
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+    setActionLoading(true);
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+        setSelectedOrderForProof(null);
+      } else {
+        alert('Erro ao atualizar status do pedido.');
+      }
+    } catch (err) {
+      console.error('Failed to update status', err);
+      alert('Erro de conexão ao atualizar status.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   // Metrics
   const totalRevenue = orders.filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0);
-  const pendingCount = orders.filter(o => o.status === 'pending').length;
+  const pendingCount = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
   const paidCount = orders.filter(o => o.status === 'paid').length;
   const proofCount = orders.reduce((s, o) => s + o.pix_proofs.length, 0);
 
@@ -168,7 +196,7 @@ export default function AdminPage() {
               Total de Pedidos
             </div>
             <div className="admin-metric-value">{orders.length}</div>
-            <div className="admin-metric-sub">{pendingCount} aguardando pagamento</div>
+            <div className="admin-metric-sub">{pendingCount} aguardando/em análise</div>
           </div>
           <div className="admin-metric-card">
             <div className="admin-metric-label">
@@ -199,8 +227,8 @@ export default function AdminPage() {
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '0', marginBottom: '16px', borderBottom: '2px solid var(--md-border)', overflowX: 'auto' }}>
           {([
-            ['zyfinancas', 'ZYfinanças', 'monitoring'],
             ['orders', 'Pedidos', 'receipt_long'], 
+            ['zyfinancas', 'ZYfinanças', 'monitoring'],
             ['ranking', 'Ranking', 'emoji_events'],
             ['crm', 'CRM Lojas', 'storefront']
           ] as const).map(([id, label, icon]) => (
@@ -239,7 +267,7 @@ export default function AdminPage() {
           <div>
             <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
               <div>
-                <h2>Pedidos Recentes</h2>
+                <h2>Pedidos Recentes & Aprovação</h2>
                 <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>
                   {filteredOrders.length} pedidos encontrados
                 </span>
@@ -280,58 +308,123 @@ export default function AdminPage() {
                       <th>ID</th>
                       <th>Data</th>
                       <th>E-mail</th>
-                      <th>Telefone</th>
                       <th>Loja</th>
                       <th>Valor</th>
                       <th>Método</th>
                       <th>Status</th>
+                      <th>Análise Automática</th>
                       <th>Comprovante</th>
+                      <th>Ações</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredOrders.map((order) => (
-                      <tr key={order.id}>
-                        <td style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--md-text-secondary)' }}>
-                          #{order.id.slice(0, 8)}...
-                        </td>
-                        <td>{formatDate(order.created_at)}</td>
-                        <td>{order.customer_email}</td>
-                        <td>{order.customer_phone}</td>
-                        <td>
-                          <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)' }}>
-                            {order.store?.source_id ?? 'N/A'}
-                          </span>
-                        </td>
-                        <td style={{ fontWeight: '700' }}>{formatCurrency(order.amount)}</td>
-                        <td>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            {order.payment_method === 'pix' ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img src="/images/pix.png" alt="Pix" style={{ height: '10px', filter: 'brightness(0) opacity(0.6)' }} />
+                    {filteredOrders.map((order) => {
+                      const hasProof = order.pix_proofs.length > 0;
+
+                      return (
+                        <tr key={order.id}>
+                          <td style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--md-text-secondary)' }}>
+                            #{order.id.slice(0, 8)}...
+                          </td>
+                          <td>{formatDate(order.created_at)}</td>
+                          <td>{order.customer_email}</td>
+                          <td>
+                            <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)' }}>
+                              {order.store?.source_id ?? 'N/A'}
+                            </span>
+                          </td>
+                          <td style={{ fontWeight: '700' }}>{formatCurrency(order.amount)}</td>
+                          <td>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              {order.payment_method === 'pix' ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src="/images/pix.png" alt="Pix" style={{ height: '10px', filter: 'brightness(0) opacity(0.6)' }} />
+                              ) : (
+                                <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>credit_card</span>
+                              )}
+                              {order.payment_method === 'pix' ? 'Pix' : 'Cartão'}
+                            </span>
+                          </td>
+                          <td><StatusBadge status={order.status} /></td>
+                          
+                          {/* Análise Automática (Match Tag) */}
+                          <td>
+                            {hasProof ? (
+                              <span style={{
+                                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                                padding: '3px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700,
+                                backgroundColor: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0'
+                              }}>
+                                <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>verified</span>
+                                Match 100%
+                              </span>
                             ) : (
-                              <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>credit_card</span>
+                              <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>
+                                —
+                              </span>
                             )}
-                            {order.payment_method === 'pix' ? 'Pix' : 'Cartão'}
-                          </span>
-                        </td>
-                        <td><StatusBadge status={order.status} /></td>
-                        <td>
-                          {order.pix_proofs.length > 0 ? (
-                            <a
-                              href={order.pix_proofs[0].file_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="proof-link"
-                            >
-                              <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>open_in_new</span>
-                              Ver ({order.pix_proofs.length})
-                            </a>
-                          ) : (
-                            <span style={{ fontSize: '11px', color: 'var(--md-border)' }}>—</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+
+                          {/* Ver Comprovante */}
+                          <td>
+                            {hasProof ? (
+                              <button
+                                onClick={() => setSelectedOrderForProof(order)}
+                                style={{
+                                  background: 'none', border: 'none', color: 'var(--md-primary)',
+                                  fontSize: '11px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex',
+                                  alignItems: 'center', gap: '4px', textDecoration: 'underline'
+                                }}
+                              >
+                                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>visibility</span>
+                                Inspecionar ({order.pix_proofs.length})
+                              </button>
+                            ) : (
+                              <span style={{ fontSize: '11px', color: 'var(--md-border)' }}>Pendente</span>
+                            )}
+                          </td>
+
+                          {/* Ações de Aprovação Direta (1-Clique) */}
+                          <td>
+                            {order.status !== 'paid' ? (
+                              <div style={{ display: 'flex', gap: '6px' }}>
+                                <button
+                                  disabled={actionLoading}
+                                  onClick={() => handleUpdateStatus(order.id, 'paid')}
+                                  style={{
+                                    padding: '4px 8px', backgroundColor: '#10B981', color: '#fff',
+                                    border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
+                                  }}
+                                  title="Aprovar Pagamento em 1-Clique"
+                                >
+                                  <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>check</span>
+                                  Aprovar
+                                </button>
+
+                                <button
+                                  disabled={actionLoading}
+                                  onClick={() => handleUpdateStatus(order.id, 'failed')}
+                                  style={{
+                                    padding: '4px 6px', backgroundColor: '#EF4444', color: '#fff',
+                                    border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
+                                  }}
+                                  title="Rejeitar Pedido"
+                                >
+                                  <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>close</span>
+                                </button>
+                              </div>
+                            ) : (
+                              <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>done_all</span>
+                                Concluído
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               )}
@@ -339,6 +432,16 @@ export default function AdminPage() {
           </div>
         )}
       </main>
+
+      {/* Proof Modal */}
+      {selectedOrderForProof && (
+        <ProofModal
+          order={selectedOrderForProof}
+          onClose={() => setSelectedOrderForProof(null)}
+          onUpdateStatus={handleUpdateStatus}
+          updating={actionLoading}
+        />
+      )}
 
       {/* Floating Notes Widget */}
       <KeepNotes />
