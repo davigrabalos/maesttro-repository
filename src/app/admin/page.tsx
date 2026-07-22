@@ -250,7 +250,7 @@ export default function AdminPage() {
                     value={filterText}
                     onChange={(e) => setFilterText(e.target.value)}
                     placeholder="Pesquisar (Pix, e-mail...)"
-                    style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', borderRadius: '4px' }}
+                    style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', color: 'var(--md-on-surface)', borderRadius: '4px' }}
                   />
                   <button
                     onClick={startVoiceSearch}
