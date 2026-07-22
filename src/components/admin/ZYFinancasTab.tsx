@@ -46,7 +46,7 @@ export function ZYFinancasTab({ orders }: { orders: any[] }) {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} tickFormatter={(v) => `R$${v}`} />
-                  <Tooltip formatter={(v: number) => [`R$ ${v.toFixed(2)}`, 'Receita']} />
+                  <Tooltip formatter={(v: any) => [`R$ ${Number(v || 0).toFixed(2)}`, 'Receita']} />
                   <Line type="monotone" dataKey="total" stroke="var(--md-primary)" strokeWidth={3} dot={{ r: 4, fill: 'var(--md-primary)' }} />
                 </LineChart>
               </ResponsiveContainer>
