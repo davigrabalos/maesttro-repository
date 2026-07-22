@@ -7,6 +7,7 @@ import { RankingTab } from '../../components/admin/RankingTab';
 import { CRMTab } from '../../components/admin/CRMTab';
 import { KeepNotes } from '../../components/admin/KeepNotes';
 import { ProofModal } from '../../components/admin/ProofModal';
+import { AdminSidebar } from '../../components/admin/AdminSidebar';
 
 interface PixProof {
   id: string;
@@ -67,12 +68,15 @@ function formatDate(dateStr: string) {
   }).format(new Date(dateStr));
 }
 
+type TabId = 'orders' | 'approved' | 'zyfinancas' | 'ranking' | 'crm' | 'notes';
+
 export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [stores, setStores] = useState<StoreData[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
-  const [activeTab, setActiveTab] = useState<'zyfinancas' | 'orders' | 'ranking' | 'crm'>('orders');
+  const [activeTab, setActiveTab] = useState<TabId>('orders');
+  const [notesOpen, setNotesOpen] = useState(false);
   
   // Voice search & filter
   const [filterText, setFilterText] = useState('');
@@ -105,7 +109,6 @@ export default function AdminPage() {
     fetchData();
   }, [fetchData]);
 
-  // Update order status API
   const handleUpdateStatus = async (orderId: string, newStatus: string) => {
     setActionLoading(true);
     try {
@@ -128,310 +131,269 @@ export default function AdminPage() {
     }
   };
 
-  // Metrics
   const totalRevenue = orders.filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0);
   const pendingCount = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
   const paidCount = orders.filter(o => o.status === 'paid').length;
   const proofCount = orders.reduce((s, o) => s + o.pix_proofs.length, 0);
 
-  // Filter orders
   const filteredOrders = useMemo(() => {
-    if (!filterText) return orders;
+    const base = activeTab === 'approved'
+      ? orders.filter(o => o.status === 'paid')
+      : orders;
+    if (!filterText) return base;
     const lower = filterText.toLowerCase();
-    return orders.filter(o => 
+    return base.filter(o =>
       o.customer_email.toLowerCase().includes(lower) ||
       o.status.toLowerCase().includes(lower) ||
       o.payment_method.toLowerCase().includes(lower) ||
       (o.store?.name && o.store.name.toLowerCase().includes(lower))
     );
-  }, [orders, filterText]);
+  }, [orders, filterText, activeTab]);
 
   const startVoiceSearch = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('Seu navegador não suporta pesquisa por voz. Tente usar o Chrome.');
       return;
     }
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SR();
     recognition.lang = 'pt-BR';
     recognition.onstart = () => setIsListening(true);
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setFilterText(transcript);
-    };
+    recognition.onresult = (event: any) => setFilterText(event.results[0][0].transcript);
     recognition.onend = () => setIsListening(false);
     recognition.start();
   };
 
+  const showOrdersTable = activeTab === 'orders' || activeTab === 'approved';
+
   return (
     <div className="admin-layout">
-      {/* Navbar */}
-      <nav className="admin-navbar">
-        <div className="admin-navbar-brand">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/ICONLOGO.png" alt="Maesttro" style={{ height: '28px', filter: 'brightness(0) invert(1)' }} />
-          <span style={{ fontSize: '12px', opacity: 0.7, borderLeft: '1px solid rgba(255,255,255,0.3)', paddingLeft: '12px' }}>
-            Painel Admin Master
-          </span>
-        </div>
-        <div className="admin-navbar-actions">
-          <span style={{ fontSize: '11px', opacity: 0.6 }}>
+      {/* Sidebar */}
+      <AdminSidebar
+        activeTab={activeTab}
+        onTabChange={(tab) => setActiveTab(tab as TabId)}
+        onNotesToggle={() => setNotesOpen(prev => !prev)}
+      />
+
+      {/* Body: Topbar + Main */}
+      <div className="admin-body">
+        {/* Topbar Fina */}
+        <div className="admin-topbar">
+          <span className="admin-topbar-info">
             Atualizado: {formatDate(lastRefresh.toISOString())}
           </span>
-          <button className="admin-refresh-btn" onClick={fetchData} disabled={loading}>
-            <span className="material-symbols-outlined" style={{ fontSize: '16px', animation: loading ? 'spin 1s linear infinite' : 'none' }}>
+          <button className="admin-refresh-btn" onClick={fetchData} disabled={loading}
+            style={{ border: '1px solid var(--md-border)', color: 'var(--md-text-primary)', backgroundColor: 'transparent' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '14px', animation: loading ? 'spin 1s linear infinite' : 'none' }}>
               {loading ? 'sync' : 'refresh'}
             </span>
             <span>{loading ? 'Carregando...' : 'Atualizar'}</span>
           </button>
         </div>
-      </nav>
 
-      <main className="admin-main">
-        {/* Metrics Overview */}
-        <div className="admin-metrics">
-          <div className="admin-metric-card">
-            <div className="admin-metric-label">
-              <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>shopping_cart</span>
-              Total de Pedidos
-            </div>
-            <div className="admin-metric-value">{orders.length}</div>
-            <div className="admin-metric-sub">{pendingCount} aguardando/em análise</div>
-          </div>
-          <div className="admin-metric-card">
-            <div className="admin-metric-label">
-              <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>payments</span>
-              Receita Confirmada
-            </div>
-            <div className="admin-metric-value" style={{ color: 'var(--md-primary)' }}>{formatCurrency(totalRevenue)}</div>
-            <div className="admin-metric-sub">{paidCount} pedidos pagos</div>
-          </div>
-          <div className="admin-metric-card">
-            <div className="admin-metric-label">
-              <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>storefront</span>
-              Lojas Ativas
-            </div>
-            <div className="admin-metric-value">{stores.filter(s => s.active).length}</div>
-            <div className="admin-metric-sub">{stores.length} total cadastradas</div>
-          </div>
-          <div className="admin-metric-card">
-            <div className="admin-metric-label">
-              <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>attach_file</span>
-              Comprovantes
-            </div>
-            <div className="admin-metric-value">{proofCount}</div>
-            <div className="admin-metric-sub">enviados pelos clientes</div>
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div style={{ display: 'flex', gap: '0', marginBottom: '16px', borderBottom: '2px solid var(--md-border)', overflowX: 'auto' }}>
-          {([
-            ['orders', 'Pedidos', 'receipt_long'], 
-            ['zyfinancas', 'ZYfinanças', 'monitoring'],
-            ['ranking', 'Ranking', 'emoji_events'],
-            ['crm', 'CRM Lojas', 'storefront']
-          ] as const).map(([id, label, icon]) => (
-            <button
-              key={id}
-              onClick={() => setActiveTab(id as any)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '6px',
-                padding: '10px 20px',
-                border: 'none',
-                borderBottom: activeTab === id ? '2px solid var(--md-primary)' : '2px solid transparent',
-                marginBottom: '-2px',
-                backgroundColor: 'transparent',
-                color: activeTab === id ? 'var(--md-primary)' : 'var(--md-text-secondary)',
-                fontFamily: 'inherit',
-                fontSize: '13px',
-                fontWeight: activeTab === id ? '700' : '400',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{icon}</span>
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        {activeTab === 'zyfinancas' && <ZYFinancasTab orders={orders} />}
-        {activeTab === 'ranking' && <RankingTab orders={orders} />}
-        {activeTab === 'crm' && <CRMTab stores={stores} />}
-
-        {/* Orders Tab */}
-        {activeTab === 'orders' && (
-          <div>
-            <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-              <div>
-                <h2>Pedidos Recentes & Aprovação</h2>
-                <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>
-                  {filteredOrders.length} pedidos encontrados
-                </span>
+        <main className="admin-main">
+          {/* Metrics Overview */}
+          <div className="admin-metrics">
+            <div className="admin-metric-card">
+              <div className="admin-metric-label">
+                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>shopping_cart</span>
+                Total de Pedidos
               </div>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <input 
-                  type="text" 
-                  value={filterText}
-                  onChange={(e) => setFilterText(e.target.value)}
-                  placeholder="Pesquisar (Pix, e-mail...)" 
-                  style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', borderRadius: '4px' }}
-                />
-                <button 
-                  onClick={startVoiceSearch}
-                  style={{ 
-                    padding: '8px', backgroundColor: isListening ? '#EF4444' : 'var(--md-surface)', 
-                    border: '1px solid var(--md-border)', borderRadius: '4px',
-                    color: isListening ? '#fff' : 'var(--md-text-secondary)', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center'
-                  }}
-                  title="Pesquisa por voz"
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px', animation: isListening ? 'pulse 1s infinite' : 'none' }}>mic</span>
-                </button>
-              </div>
+              <div className="admin-metric-value">{orders.length}</div>
+              <div className="admin-metric-sub">{pendingCount} aguardando/em análise</div>
             </div>
-            
-            <div className="admin-table-wrapper">
-              {filteredOrders.length === 0 ? (
-                <div className="admin-empty">
-                  <span className="material-symbols-outlined" style={{ fontSize: '40px', display: 'block', marginBottom: '12px', opacity: 0.4 }}>search_off</span>
-                  Nenhum pedido encontrado.
+            <div className="admin-metric-card">
+              <div className="admin-metric-label">
+                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>payments</span>
+                Receita Confirmada
+              </div>
+              <div className="admin-metric-value" style={{ color: 'var(--md-primary)' }}>{formatCurrency(totalRevenue)}</div>
+              <div className="admin-metric-sub">{paidCount} pedidos pagos</div>
+            </div>
+            <div className="admin-metric-card">
+              <div className="admin-metric-label">
+                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>storefront</span>
+                Lojas Ativas
+              </div>
+              <div className="admin-metric-value">{stores.filter(s => s.active).length}</div>
+              <div className="admin-metric-sub">{stores.length} total cadastradas</div>
+            </div>
+            <div className="admin-metric-card">
+              <div className="admin-metric-label">
+                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>attach_file</span>
+                Comprovantes
+              </div>
+              <div className="admin-metric-value">{proofCount}</div>
+              <div className="admin-metric-sub">enviados pelos clientes</div>
+            </div>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === 'zyfinancas' && <ZYFinancasTab orders={orders} />}
+          {activeTab === 'ranking' && <RankingTab orders={orders} />}
+          {activeTab === 'crm' && <CRMTab stores={stores} />}
+
+          {/* Orders / Approved Table */}
+          {showOrdersTable && (
+            <div>
+              <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                <div>
+                  <h2>{activeTab === 'approved' ? 'Pagamentos Aprovados' : 'Pedidos Recentes & Aprovação'}</h2>
+                  <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>
+                    {filteredOrders.length} pedidos encontrados
+                  </span>
                 </div>
-              ) : (
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Data</th>
-                      <th>E-mail</th>
-                      <th>Loja</th>
-                      <th>Valor</th>
-                      <th>Método</th>
-                      <th>Status</th>
-                      <th>Análise Automática</th>
-                      <th>Comprovante</th>
-                      <th>Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredOrders.map((order) => {
-                      const hasProof = order.pix_proofs.length > 0;
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Pesquisar (Pix, e-mail...)"
+                    style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', borderRadius: '4px' }}
+                  />
+                  <button
+                    onClick={startVoiceSearch}
+                    style={{
+                      padding: '8px', backgroundColor: isListening ? '#EF4444' : 'var(--md-surface)',
+                      border: '1px solid var(--md-border)', borderRadius: '4px',
+                      color: isListening ? '#fff' : 'var(--md-text-secondary)', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center'
+                    }}
+                    title="Pesquisa por voz"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px', animation: isListening ? 'pulse 1s infinite' : 'none' }}>mic</span>
+                  </button>
+                </div>
+              </div>
 
-                      return (
-                        <tr key={order.id}>
-                          <td style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--md-text-secondary)' }}>
-                            #{order.id.slice(0, 8)}...
-                          </td>
-                          <td>{formatDate(order.created_at)}</td>
-                          <td>{order.customer_email}</td>
-                          <td>
-                            <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)' }}>
-                              {order.store?.source_id ?? 'N/A'}
-                            </span>
-                          </td>
-                          <td style={{ fontWeight: '700' }}>{formatCurrency(order.amount)}</td>
-                          <td>
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                              {order.payment_method === 'pix' ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src="/images/pix.png" alt="Pix" style={{ height: '10px', filter: 'brightness(0) opacity(0.6)' }} />
+              <div className="admin-table-wrapper">
+                {filteredOrders.length === 0 ? (
+                  <div className="admin-empty">
+                    <span className="material-symbols-outlined" style={{ fontSize: '40px', display: 'block', marginBottom: '12px', opacity: 0.4 }}>search_off</span>
+                    Nenhum pedido encontrado.
+                  </div>
+                ) : (
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>E-mail</th>
+                        <th>Loja</th>
+                        <th>Valor</th>
+                        <th>Método</th>
+                        <th>Status</th>
+                        <th>Análise Auto</th>
+                        <th>Comprovante</th>
+                        <th>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredOrders.map((order) => {
+                        const hasProof = order.pix_proofs.length > 0;
+                        return (
+                          <tr key={order.id}>
+                            <td style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--md-text-secondary)' }}>
+                              #{order.id.slice(0, 8)}...
+                            </td>
+                            <td>{formatDate(order.created_at)}</td>
+                            <td>{order.customer_email}</td>
+                            <td>
+                              <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)' }}>
+                                {order.store?.source_id ?? 'N/A'}
+                              </span>
+                            </td>
+                            <td style={{ fontWeight: '700' }}>{formatCurrency(order.amount)}</td>
+                            <td>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                {order.payment_method === 'pix' ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src="/images/pix.png" alt="Pix" style={{ height: '10px', filter: 'brightness(0) opacity(0.6)' }} />
+                                ) : (
+                                  <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>credit_card</span>
+                                )}
+                                {order.payment_method === 'pix' ? 'Pix' : 'Cartão'}
+                              </span>
+                            </td>
+                            <td><StatusBadge status={order.status} /></td>
+                            <td>
+                              {hasProof ? (
+                                <span style={{
+                                  display: 'inline-flex', alignItems: 'center', gap: '4px',
+                                  padding: '3px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700,
+                                  backgroundColor: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0'
+                                }}>
+                                  <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>verified</span>
+                                  Match 100%
+                                </span>
                               ) : (
-                                <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>credit_card</span>
+                                <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>—</span>
                               )}
-                              {order.payment_method === 'pix' ? 'Pix' : 'Cartão'}
-                            </span>
-                          </td>
-                          <td><StatusBadge status={order.status} /></td>
-                          
-                          {/* Análise Automática (Match Tag) */}
-                          <td>
-                            {hasProof ? (
-                              <span style={{
-                                display: 'inline-flex', alignItems: 'center', gap: '4px',
-                                padding: '3px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700,
-                                backgroundColor: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0'
-                              }}>
-                                <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>verified</span>
-                                Match 100%
-                              </span>
-                            ) : (
-                              <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>
-                                —
-                              </span>
-                            )}
-                          </td>
-
-                          {/* Ver Comprovante */}
-                          <td>
-                            {hasProof ? (
-                              <button
-                                onClick={() => setSelectedOrderForProof(order)}
-                                style={{
-                                  background: 'none', border: 'none', color: 'var(--md-primary)',
-                                  fontSize: '11px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex',
-                                  alignItems: 'center', gap: '4px', textDecoration: 'underline'
-                                }}
-                              >
-                                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>visibility</span>
-                                Inspecionar ({order.pix_proofs.length})
-                              </button>
-                            ) : (
-                              <span style={{ fontSize: '11px', color: 'var(--md-border)' }}>Pendente</span>
-                            )}
-                          </td>
-
-                          {/* Ações de Aprovação Direta (1-Clique) */}
-                          <td>
-                            {order.status !== 'paid' ? (
-                              <div style={{ display: 'flex', gap: '6px' }}>
+                            </td>
+                            <td>
+                              {hasProof ? (
                                 <button
-                                  disabled={actionLoading}
-                                  onClick={() => handleUpdateStatus(order.id, 'paid')}
+                                  onClick={() => setSelectedOrderForProof(order)}
                                   style={{
-                                    padding: '4px 8px', backgroundColor: '#10B981', color: '#fff',
-                                    border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
-                                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
+                                    background: 'none', border: 'none', color: 'var(--md-primary)',
+                                    fontSize: '11px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex',
+                                    alignItems: 'center', gap: '4px', textDecoration: 'underline'
                                   }}
-                                  title="Aprovar Pagamento em 1-Clique"
                                 >
-                                  <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>check</span>
-                                  Aprovar
+                                  <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>visibility</span>
+                                  Inspecionar
                                 </button>
-
-                                <button
-                                  disabled={actionLoading}
-                                  onClick={() => handleUpdateStatus(order.id, 'failed')}
-                                  style={{
-                                    padding: '4px 6px', backgroundColor: '#EF4444', color: '#fff',
-                                    border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
-                                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
-                                  }}
-                                  title="Rejeitar Pedido"
-                                >
-                                  <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>close</span>
-                                </button>
-                              </div>
-                            ) : (
-                              <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>done_all</span>
-                                Concluído
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              )}
+                              ) : (
+                                <span style={{ fontSize: '11px', color: 'var(--md-border)' }}>Pendente</span>
+                              )}
+                            </td>
+                            <td>
+                              {order.status !== 'paid' ? (
+                                <div style={{ display: 'flex', gap: '6px' }}>
+                                  <button
+                                    disabled={actionLoading}
+                                    onClick={() => handleUpdateStatus(order.id, 'paid')}
+                                    style={{
+                                      padding: '4px 8px', backgroundColor: '#10B981', color: '#fff',
+                                      border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                                      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
+                                    }}
+                                    title="Aprovar"
+                                  >
+                                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>check</span>
+                                    Aprovar
+                                  </button>
+                                  <button
+                                    disabled={actionLoading}
+                                    onClick={() => handleUpdateStatus(order.id, 'failed')}
+                                    style={{
+                                      padding: '4px 6px', backgroundColor: '#EF4444', color: '#fff',
+                                      border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                                      cursor: 'pointer', display: 'inline-flex', alignItems: 'center'
+                                    }}
+                                    title="Rejeitar"
+                                  >
+                                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>close</span>
+                                  </button>
+                                </div>
+                              ) : (
+                                <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                  <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>done_all</span>
+                                  Concluído
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-      </main>
+          )}
+        </main>
+      </div>
 
       {/* Proof Modal */}
       {selectedOrderForProof && (
@@ -444,7 +406,7 @@ export default function AdminPage() {
       )}
 
       {/* Floating Notes Widget */}
-      <KeepNotes />
+      <KeepNotes forceOpen={notesOpen} onForceClose={() => setNotesOpen(false)} />
     </div>
   );
 }
