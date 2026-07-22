@@ -111,17 +111,14 @@ export function ConfirmacaoStatusClient({ orderId, initialStatus, initialOrder }
           </div>
 
           {/* Status Box */}
-          <div style={{
+          <div className={isPaid ? 'status-badge status-paid' : 'status-badge status-pending'} style={{
             padding: '12px 16px',
-            backgroundColor: isPaid ? '#DCFCE7' : '#FEF3C7',
-            border: isPaid ? '1px solid #86EFAC' : '1px solid #FCD34D',
             borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
             fontSize: '13px',
-            color: isPaid ? '#15803D' : '#92400E',
-            fontWeight: 600
+            width: '100%'
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
               {isPaid ? 'task_alt' : 'sync'}

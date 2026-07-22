@@ -104,10 +104,11 @@ export function PaymentMethodSelector({ orderId }: PaymentMethodSelectorProps) {
               <img
                 src="/images/pix.png"
                 alt="Pix Logo"
+                className={selected === 'pix' ? '' : 'pix-icon-img'}
                 style={{
                   height: '16px',
                   objectFit: 'contain',
-                  filter: selected === 'pix' ? 'brightness(0) invert(1)' : 'brightness(0) opacity(0.85)',
+                  filter: selected === 'pix' ? 'brightness(0) invert(1)' : undefined,
                   transition: 'filter 0.2s ease',
                 }}
               />

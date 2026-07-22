@@ -309,7 +309,7 @@ export default function AdminPage() {
                               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                 {order.payment_method === 'pix' ? (
                                   // eslint-disable-next-line @next/next/no-img-element
-                                  <img src="/images/pix.png" alt="Pix" style={{ height: '10px', filter: 'brightness(0) opacity(0.6)' }} />
+                                  <img src="/images/pix.png" alt="Pix" className="pix-icon-img" style={{ height: '10px' }} />
                                 ) : (
                                   <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>credit_card</span>
                                 )}
