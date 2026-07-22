@@ -7,13 +7,35 @@ export function CRMTab({ stores }: { stores: any[] }) {
   const [newName, setNewName] = useState('');
   const [newSourceId, setNewSourceId] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate API call for now (this would normally hit a Supabase endpoint)
-    alert(`Mock: Loja "${newName}" com source_id "${newSourceId}" criada! (Precisa de endpoint no backend)`);
-    setIsCreating(false);
-    setNewName('');
-    setNewSourceId('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/stores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName, source_id: newSourceId })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        alert(data.error || 'Erro ao criar loja.');
+        return;
+      }
+      
+      alert(`Loja "${data.store.name}" criada com sucesso! Você pode atualizar a página para que ela apareça na lista.`);
+      setIsCreating(false);
+      setNewName('');
+      setNewSourceId('');
+    } catch (err) {
+      alert('Erro de conexão ao criar loja.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,8 +84,8 @@ export function CRMTab({ stores }: { stores: any[] }) {
               />
             </div>
           </div>
-          <button type="submit" className="nav-btn-create" style={{ width: '100%', backgroundColor: 'var(--md-primary)', color: '#fff', padding: '12px', border: 'none', fontWeight: 'bold' }}>
-            Salvar e Gerar Link
+          <button type="submit" className="nav-btn-create" disabled={loading} style={{ width: '100%', backgroundColor: 'var(--md-primary)', color: '#fff', padding: '12px', border: 'none', fontWeight: 'bold', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
+            {loading ? 'Criando...' : 'Salvar e Gerar Link'}
           </button>
         </form>
       )}
