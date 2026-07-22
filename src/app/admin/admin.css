@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 20px 16px;
+  padding: 20px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   min-height: 72px;
   flex-shrink: 0;
@@ -50,7 +50,7 @@
 .sidebar-logo-text {
   color: #fff;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: 0.5px;
   white-space: nowrap;
   opacity: 0;
@@ -87,7 +87,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 16px 4px;
+  padding: 10px 26px 4px;
 }
 
 .sidebar-group-icon {
@@ -117,7 +117,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 16px;
+  padding: 10px 20px;
   width: 100%;
   background: none;
   border: none;
@@ -125,7 +125,7 @@
   cursor: pointer;
   color: rgba(255, 255, 255, 0.65);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   text-align: left;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -170,7 +170,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px;
+  padding: 16px 25px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.4);
   flex-shrink: 0;
@@ -285,7 +285,7 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .admin-table thead {
