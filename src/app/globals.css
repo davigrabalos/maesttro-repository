@@ -1,29 +1,30 @@
 @import "./checkout.css";
 
 :root {
-  /* Maesttro Color System */
-  --md-primary: #1C3A27;
-  --md-primary-variant: #12261A;
-  --md-primary-light: #E6F0EA;
+  /* Neo-Finance Color System */
+  --md-primary: #5B21B6;           /* Violeta Profundo */
+  --md-primary-variant: #4C1D95;   /* Violeta Mais Escuro */
+  --md-primary-light: #EDE9FE;     /* Violeta Light Tint */
   
-  --md-secondary: #D97706;
-  --md-secondary-variant: #B45309;
-  --md-secondary-light: #FEF3C7;
+  --md-secondary: #059669;         /* Verde Menta / Esmeralda */
+  --md-secondary-variant: #047857; /* Verde Escuro */
+  --md-secondary-light: #D1FAE5;   /* Verde Light Tint */
   
-  --md-background: #E5E8DF;
-  --md-surface: #EFF1E9;
-  --md-border: #D2D6C8;
+  --md-background: #F8FAFC;        /* Cinza Frio Quase Branco */
+  --md-surface: #FFFFFF;           /* Cards Brancos */
+  --md-border: #E2E8F0;            /* Bordas Frias */
   
-  --md-error: #DC2626;
-  --md-success: #16A34A;
-  --md-warning: #EAB308;
-  --md-info: #475569;
+  --md-error: #E11D48;             /* Rose Red */
+  --md-success: #10B981;           /* Emerald */
+  --md-warning: #F59E0B;           /* Amber */
+  --md-info: #0284C7;              /* Sky Blue */
   
-  --md-on-primary: #EFF1E9;
-  --md-on-secondary: #EFF1E9;
-  --md-on-background: #0F1710;
-  --md-on-surface: #0F1710;
-  --md-text-secondary: #526056;
+  --md-on-primary: #FFFFFF;
+  --md-on-secondary: #FFFFFF;
+  --md-on-background: #0F172A;     /* Texto Principal Frio */
+  --md-on-surface: #0F172A;
+  --md-text-secondary: #64748B;    /* Texto Secundário Slate */
+  --md-text-primary: #0F172A;
 
   /* Zeroed Border Radius & Shadows as requested */
   --md-shape-small: 0px;
