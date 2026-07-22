@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
 export function GlobalKeepNotes() {
   const [mounted, setMounted] = useState(false);
@@ -111,7 +112,10 @@ export function GlobalKeepNotes() {
     localStorage.removeItem('global_keep_pos');
   };
 
+  const pathname = usePathname();
+
   if (!mounted) return null;
+  if (!pathname.startsWith('/admin')) return null;
 
   const stylePosition: React.CSSProperties = position
     ? { left: `${position.x}px`, top: `${position.y}px`, right: 'auto', bottom: 'auto' }
