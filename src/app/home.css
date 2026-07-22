@@ -259,10 +259,22 @@
 /* Footer */
 .home-footer {
   background-color: var(--md-primary-variant);
-  color: #fff;
+  color: #ffffff;
   padding: 48px 5% 24px;
   position: relative;
   z-index: 1;
+}
+
+.home-footer h1,
+.home-footer h2,
+.home-footer h3,
+.home-footer h4,
+.home-footer h5,
+.home-footer h6,
+.home-footer p,
+.home-footer span,
+.home-footer li {
+  color: #ffffff;
 }
 
 .home-footer a {
