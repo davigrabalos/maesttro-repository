@@ -1,11 +1,11 @@
 /* Checkout Layout */
 .checkout-layout {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 32px;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 48px 24px;
 }
 
 .checkout-left {
@@ -16,6 +16,9 @@
 .checkout-right {
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 48px;
+  height: fit-content;
 }
 
 @media (max-width: 900px) {

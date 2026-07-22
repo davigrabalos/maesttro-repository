@@ -1,0 +1,323 @@
+/* home.css - Maesttro Landing Page Styles */
+
+/* Header / Navbar */
+.home-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 5%;
+  background-color: var(--md-primary-variant);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.home-navbar-logo img {
+  height: 48px;
+  object-fit: contain;
+}
+
+.home-navbar-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.nav-link-login {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.nav-link-login:hover {
+  color: #fff;
+}
+
+.nav-btn-create {
+  background-color: var(--md-primary);
+  color: #fff;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid var(--md-primary);
+  transition: all 0.2s;
+}
+
+.nav-btn-create:hover {
+  background-color: var(--md-primary-variant);
+}
+
+/* Sections Base */
+.home-section {
+  padding: 80px 5%;
+}
+
+.home-section.bg-primary {
+  background-color: var(--md-primary);
+  color: var(--md-on-primary);
+  position: relative;
+  z-index: 1;
+}
+
+.home-section.bg-accent {
+  background-color: var(--md-secondary);
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.home-section.bg-accent h1,
+.home-section.bg-accent h2,
+.home-section.bg-accent h3,
+.home-section.bg-accent p,
+.home-section.bg-accent span,
+.home-section.bg-accent li {
+  color: #fff;
+}
+
+.home-section.bg-surface {
+  background-color: var(--md-surface);
+}
+
+.home-section.bg-background {
+  background-color: var(--md-background);
+}
+
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Typography Overrides for Home */
+.home-title {
+  font-family: 'Vina Sans', sans-serif;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.home-subtitle {
+  font-size: 20px;
+  line-height: 1.6;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: inherit;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.section-title {
+  font-family: 'Vina Sans', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* Hero Section */
+.hero-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Hero UI Mockup (CSS only representation) */
+.hero-mockup {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--md-surface);
+  border: 2px solid var(--md-border);
+  padding: 24px;
+  box-shadow: 20px 20px 0px rgba(0,0,0,0.05);
+}
+
+.mockup-header {
+  height: 20px;
+  background-color: var(--md-border);
+  margin-bottom: 24px;
+  width: 40%;
+}
+
+.mockup-field {
+  height: 48px;
+  border: 1px solid var(--md-border);
+  margin-bottom: 16px;
+  background-color: var(--md-background);
+}
+
+.mockup-btn {
+  height: 48px;
+  background-color: var(--md-primary);
+  margin-top: 24px;
+}
+
+/* Checkout Conversion Section */
+.conversion-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.conversion-layout.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Features Grid (Recursos Poderosos) */
+.features-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.feature-card {
+  background-color: var(--md-background);
+  border: 1px solid var(--md-border);
+  padding: 32px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 8px 8px 0px var(--md-border);
+}
+
+.feature-icon {
+  font-size: 32px;
+  color: var(--md-primary);
+  margin-bottom: 20px;
+}
+
+.feature-title {
+  font-family: 'Vina Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  color: var(--md-on-background);
+}
+
+.feature-desc {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--md-text-secondary);
+  line-height: 1.6;
+}
+
+/* Control Section */
+.control-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.stat-item {
+  border-left: 2px solid var(--md-secondary);
+  padding-left: 16px;
+}
+
+.stat-value {
+  font-family: 'Vina Sans', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  color: inherit;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 8px;
+  opacity: 0.9;
+}
+
+/* Footer */
+.home-footer {
+  background-color: var(--md-primary-variant);
+  color: #fff;
+  padding: 48px 5% 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.home-footer a {
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s;
+}
+
+.home-footer a:hover {
+  color: #fff;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-layout, .conversion-layout {
+    flex-direction: column;
+    text-align: center;
+  }
+  .conversion-layout.reverse {
+    flex-direction: column;
+  }
+  .home-title {
+    font-size: 36px;
+  }
+  .home-subtitle {
+    margin: 0 auto 32px;
+  }
+  .hero-visual {
+    width: 100%;
+  }
+  .footer-top {
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    text-align: center;
+  }
+  .control-stats {
+    justify-content: center;
+  }
+}
