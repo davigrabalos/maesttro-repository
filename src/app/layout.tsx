@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { GlobalKeepNotes } from "@/components/ui/GlobalKeepNotes";
 
 export const metadata: Metadata = {
   title: "Maesttro Checkout",
@@ -38,7 +39,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <GlobalKeepNotes />
+      </body>
     </html>
   );
 }

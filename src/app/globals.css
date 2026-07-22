@@ -1,30 +1,30 @@
 @import "./checkout.css";
 
 :root {
-  /* Neo-Finance Color System */
-  --md-primary: #5B21B6;           /* Violeta Profundo */
-  --md-primary-variant: #4C1D95;   /* Violeta Mais Escuro */
-  --md-primary-light: #EDE9FE;     /* Violeta Light Tint */
+  /* Cyber Coral — Light Mode */
+  --md-primary: #0F4C81;           /* Azul Petróleo / Clássico */
+  --md-primary-variant: #0A3358;   /* Petróleo Escuro */
+  --md-primary-light: #E0F2FE;     /* Sky Light Tint */
   
-  --md-secondary: #059669;         /* Verde Menta / Esmeralda */
-  --md-secondary-variant: #047857; /* Verde Escuro */
-  --md-secondary-light: #D1FAE5;   /* Verde Light Tint */
+  --md-secondary: #FF6B6B;         /* Coral Neon Vibrante */
+  --md-secondary-variant: #EE5253; /* Coral Escuro */
+  --md-secondary-light: #FFE5E5;   /* Coral Light Tint */
   
-  --md-background: #F8FAFC;        /* Cinza Frio Quase Branco */
+  --md-background: #FAF9F6;        /* Off-White Quente */
   --md-surface: #FFFFFF;           /* Cards Brancos */
-  --md-border: #E2E8F0;            /* Bordas Frias */
+  --md-border: #E5E7EB;            /* Divisores Claros */
   
-  --md-error: #E11D48;             /* Rose Red */
-  --md-success: #10B981;           /* Emerald */
-  --md-warning: #F59E0B;           /* Amber */
-  --md-info: #0284C7;              /* Sky Blue */
+  --md-error: #D63031;             /* Vermelho Vivo */
+  --md-success: #00B894;           /* Verde Turquesa */
+  --md-warning: #FDCB6E;           /* Amarelo Mostarda */
+  --md-info: #A29BFE;              /* Lavanda */
   
   --md-on-primary: #FFFFFF;
   --md-on-secondary: #FFFFFF;
-  --md-on-background: #0F172A;     /* Texto Principal Frio */
-  --md-on-surface: #0F172A;
-  --md-text-secondary: #64748B;    /* Texto Secundário Slate */
-  --md-text-primary: #0F172A;
+  --md-on-background: #1A202C;     /* Texto Principal Escuro */
+  --md-on-surface: #1A202C;
+  --md-text-secondary: #718096;    /* Texto Secundário */
+  --md-text-primary: #1A202C;
 
   /* Zeroed Border Radius & Shadows as requested */
   --md-shape-small: 0px;
@@ -38,6 +38,33 @@
   /* Transitions */
   --md-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --md-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  /* Cyber Coral — Dark Mode */
+  --md-primary: #0F4C81;
+  --md-primary-variant: #0A3358;
+  --md-primary-light: #1A2332;
+  
+  --md-secondary: #FF6B6B;
+  --md-secondary-variant: #EE5253;
+  --md-secondary-light: #3D1F24;
+  
+  --md-background: #121824;        /* Graphite Black */
+  --md-surface: #1A2332;           /* Cards Escuros */
+  --md-border: #2D3748;            /* Divisores Escuros */
+  
+  --md-error: #D63031;
+  --md-success: #00B894;
+  --md-warning: #FDCB6E;
+  --md-info: #A29BFE;
+  
+  --md-on-primary: #FFFFFF;
+  --md-on-secondary: #FFFFFF;
+  --md-on-background: #F7FAFC;     /* Texto Principal Claro */
+  --md-on-surface: #F7FAFC;
+  --md-text-secondary: #A0AEC0;    /* Texto Secundário Claro */
+  --md-text-primary: #F7FAFC;
 }
 
 * {

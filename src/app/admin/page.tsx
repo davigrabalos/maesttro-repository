@@ -5,9 +5,9 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ZYFinancasTab } from '../../components/admin/ZYFinancasTab';
 import { RankingTab } from '../../components/admin/RankingTab';
 import { CRMTab } from '../../components/admin/CRMTab';
-import { KeepNotes } from '../../components/admin/KeepNotes';
 import { ProofModal } from '../../components/admin/ProofModal';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
+import { ThemeToggle } from '../../components/ui/ThemeToggle';
 
 interface PixProof {
   id: string;
@@ -172,13 +172,14 @@ export default function AdminPage() {
       <AdminSidebar
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab as TabId)}
-        onNotesToggle={() => setNotesOpen(prev => !prev)}
+        onNotesToggle={() => window.dispatchEvent(new Event('toggle_global_keep_notes'))}
       />
 
       {/* Body: Topbar + Main */}
       <div className="admin-body">
         {/* Topbar Fina */}
         <div className="admin-topbar">
+          <ThemeToggle />
           <span className="admin-topbar-info">
             Atualizado: {formatDate(lastRefresh.toISOString())}
           </span>
@@ -404,9 +405,6 @@ export default function AdminPage() {
           updating={actionLoading}
         />
       )}
-
-      {/* Floating Notes Widget */}
-      <KeepNotes forceOpen={notesOpen} onForceClose={() => setNotesOpen(false)} />
     </div>
   );
 }
