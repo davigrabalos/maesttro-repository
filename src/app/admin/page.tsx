@@ -9,6 +9,7 @@ import { ProofModal } from '../../components/admin/ProofModal';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
 import { AdminHeader } from '../../components/admin/AdminHeader';
 import { DashboardTab } from '../../components/admin/DashboardTab';
+import { CreateStoreTab } from '../../components/admin/CreateStoreTab';
 
 interface PixProof {
   id: string;
@@ -214,6 +215,12 @@ export default function AdminPage() {
           {activeTab === 'zyfinancas' && <ZYFinancasTab orders={storeFilteredOrders} />}
           {activeTab === 'ranking' && <RankingTab orders={orders} />}
           {activeTab === 'crm' && <CRMTab stores={stores} />}
+          {activeTab === 'create_store' && (
+            <CreateStoreTab onStoreCreated={() => {
+              fetchData();
+              setActiveTab('dashboard');
+            }} />
+          )}
 
           {/* Orders / Approved Table */}
           {showOrdersTable && (

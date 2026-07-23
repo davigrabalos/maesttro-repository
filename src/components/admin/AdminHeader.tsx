@@ -178,18 +178,27 @@ export function AdminHeader({
         </Link>
 
         {/* User Profile Avatar */}
-        <div className="topbar-profile-avatar" title={profile?.profile?.full_name || "Minha Conta"} style={
-          profile?.profile?.avatar_url ? {
+        <Link href="/admin/profile" className="topbar-profile-avatar" title={profile?.profile?.full_name || "Meu Perfil"} style={{
+          ...(profile?.profile?.avatar_url ? {
             backgroundImage: `url(${profile.profile.avatar_url})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             color: 'transparent'
-          } : {}
-        }>
+          } : {}),
+          cursor: 'pointer',
+          textDecoration: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'box-shadow 0.2s, transform 0.2s'
+        }}
+        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.2)'; }}
+        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}
+        >
           {!profile?.profile?.avatar_url ? (
             <span>{profile?.profile?.full_name ? profile.profile.full_name.substring(0, 2).toUpperCase() : 'AD'}</span>
           ) : null}
-        </div>
+        </Link>
       </div>
     </header>
   );

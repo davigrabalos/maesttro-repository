@@ -94,6 +94,31 @@ export function AdminSidebar({
             </option>
           ))}
         </select>
+        <button 
+          onClick={() => onTabChange('create_store')}
+          style={{
+            marginTop: '10px',
+            width: '100%',
+            padding: '8px',
+            backgroundColor: 'transparent',
+            border: '1px dashed var(--md-border)',
+            borderRadius: '6px',
+            color: 'var(--md-text-primary)',
+            fontSize: '12px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--md-surface)'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>add</span>
+          Nova Loja
+        </button>
       </div>
 
       <nav className="sidebar-nav">

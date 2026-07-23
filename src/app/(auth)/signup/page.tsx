@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { login, signInWithGoogle } from './actions';
+import { signup, signInWithGoogle } from '../login/actions';
 
-export default async function LoginPage({
+export default async function SignupPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>;
@@ -64,8 +64,8 @@ export default async function LoginPage({
         </div>
 
         <p style={{ fontSize: '22px', maxWidth: '420px', opacity: 0.9, lineHeight: 1.65, position: 'relative', zIndex: 1, textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>
-          Tudo conectado. Tudo sob controle.<br />
-          Orquestre e automatize toda a sua<br />operação em um só lugar.
+          Crie sua conta no Maesttro.<br />
+          Tudo conectado. Tudo sob controle.
         </p>
 
         {/* Bottom decoration line */}
@@ -87,10 +87,10 @@ export default async function LoginPage({
         <div style={{ width: '100%', maxWidth: '420px', padding: '0 32px' }}>
 
           <h2 style={{ fontSize: '26px', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
-            Acesse o Painel
+            Criar Nova Conta
           </h2>
           <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '28px' }}>
-            Entre com seus dados ou crie uma conta.
+            Preencha seus dados para começar.
           </p>
 
           {errorMsg && (
@@ -108,7 +108,28 @@ export default async function LoginPage({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151', letterSpacing: '0.02em' }}>
-                E-MAIL
+                SEU NOME
+              </label>
+              <input
+                name="name"
+                required
+                placeholder="Ex: Davi"
+                style={{
+                  padding: '11px 14px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  backgroundColor: '#fff',
+                  color: '#111827',
+                  transition: 'border-color 0.15s',
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151', letterSpacing: '0.02em' }}>
+                E-MAIL *
               </label>
               <input
                 name="email"
@@ -130,7 +151,7 @@ export default async function LoginPage({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151', letterSpacing: '0.02em' }}>
-                SENHA
+                SENHA *
               </label>
               <input
                 name="password"
@@ -150,10 +171,10 @@ export default async function LoginPage({
               />
             </div>
 
-            {/* Botão Entrar */}
+            {/* Botão de Registro */}
             <div style={{ display: 'flex', marginTop: '4px' }}>
               <button
-                formAction={login}
+                formAction={signup}
                 style={{
                   flex: 1,
                   backgroundColor: '#111827',
@@ -167,7 +188,7 @@ export default async function LoginPage({
                   letterSpacing: '0.02em',
                 }}
               >
-                Entrar
+                Criar Conta
               </button>
             </div>
           </form>
@@ -208,23 +229,15 @@ export default async function LoginPage({
                 <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                 <path fill="none" d="M0 0h48v48H0z"/>
               </svg>
-              Continuar com o Google
+              Cadastrar com o Google
             </button>
           </form>
 
           <p style={{ fontSize: '13px', color: '#6B7280', textAlign: 'center', marginTop: '24px' }}>
-            Não tem uma conta?{' '}
-            <Link href="/signup" style={{ color: '#111827', fontWeight: 600, textDecoration: 'none' }}>
-              Crie agora
+            Já tem uma conta?{' '}
+            <Link href="/login" style={{ color: '#111827', fontWeight: 600, textDecoration: 'none' }}>
+              Entrar aqui
             </Link>
-          </p>
-
-          <p style={{ fontSize: '11px', color: '#9CA3AF', textAlign: 'center', marginTop: '28px', lineHeight: 1.6 }}>
-            Ao continuar, você concorda com os{' '}
-            <span style={{ color: '#374151', textDecoration: 'underline', cursor: 'pointer' }}>Termos de Uso</span>
-            {' '}e a{' '}
-            <span style={{ color: '#374151', textDecoration: 'underline', cursor: 'pointer' }}>Política de Privacidade</span>
-            {' '}do Maesttro.
           </p>
 
         </div>
