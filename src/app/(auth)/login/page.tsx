@@ -13,6 +13,26 @@ export default async function LoginPage({
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'var(--font-body, "Google Sans", sans-serif)' }}>
       
+      {/* CSS para o Gradiente Animado */}
+      <style>{`
+        @keyframes maesttroGradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .maesttro-animated-title {
+          font-family: var(--font-heading, "Barriecito", cursive);
+          font-size: 72px;
+          line-height: 1;
+          letter-spacing: 0.01em;
+          background: linear-gradient(90deg, #FFFFFF, #60A5FA, #F59E0B, #EF4444, #3B82F6, #FFFFFF);
+          background-size: 300% 300%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: maesttroGradient 6s ease infinite;
+        }
+      `}</style>
+
       {/* ===== ESQUERDA: Banner ===== */}
       <div style={{
         flex: 1,
@@ -38,13 +58,7 @@ export default async function LoginPage({
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '36px', position: 'relative' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/icon.png" alt="Maesttro icon" style={{ width: '72px', height: '72px', objectFit: 'contain' }} />
-          <span style={{
-            fontFamily: 'var(--font-heading, "Barriecito", cursive)',
-            fontSize: '72px',
-            color: '#ffffff',
-            lineHeight: 1,
-            letterSpacing: '0.01em',
-          }}>
+          <span className="maesttro-animated-title">
             Maesttro
           </span>
         </div>
