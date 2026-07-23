@@ -13,57 +13,56 @@ export default async function LoginPage({
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'var(--font-body, "Google Sans", sans-serif)' }}>
       
-      {/* CSS para o Gradiente Animado */}
+      {/* CSS para o Gradiente Animado de Fundo */}
       <style>{`
-        @keyframes maesttroGradient {
+        @keyframes brandBgGradient {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
-        .maesttro-animated-title {
-          font-family: var(--font-heading, "Barriecito", cursive);
-          font-size: 72px;
-          line-height: 1;
-          letter-spacing: 0.01em;
-          background: linear-gradient(90deg, #FFFFFF, #60A5FA, #F59E0B, #EF4444, #3B82F6, #FFFFFF);
-          background-size: 300% 300%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: maesttroGradient 6s ease infinite;
+        .login-left-banner {
+          flex: 1;
+          background: linear-gradient(-45deg, #111827, #1e1e38, #C75C16, #DC2626, #2563EB, #111827);
+          background-size: 400% 400%;
+          animation: brandBgGradient 14s ease infinite;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 48px;
+          color: #ffffff;
+          text-align: center;
+          position: relative;
+          overflow: hidden;
         }
       `}</style>
 
-      {/* ===== ESQUERDA: Banner ===== */}
-      <div style={{
-        flex: 1,
-        backgroundColor: '#111827',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '48px',
-        color: '#fff',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* Subtle background glow */}
+      {/* ===== ESQUERDA: Banner com Gradiente Animado da Marca ===== */}
+      <div className="login-left-banner">
+        {/* Overlay escuro sutil para garantir alto contraste do texto */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(37,99,235,0.12) 0%, transparent 60%)',
+          background: 'radial-gradient(circle at center, rgba(17, 24, 39, 0.4) 0%, rgba(17, 24, 39, 0.75) 100%)',
           pointerEvents: 'none',
         }} />
 
         {/* Logo + Título */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '36px', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '36px', position: 'relative', zIndex: 1 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/icon.png" alt="Maesttro icon" style={{ width: '72px', height: '72px', objectFit: 'contain' }} />
-          <span className="maesttro-animated-title">
+          <span style={{
+            fontFamily: 'var(--font-heading, "Barriecito", cursive)',
+            fontSize: '72px',
+            color: '#ffffff',
+            lineHeight: 1,
+            letterSpacing: '0.01em',
+            textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+          }}>
             Maesttro
           </span>
         </div>
 
-        <p style={{ fontSize: '22px', maxWidth: '420px', opacity: 0.65, lineHeight: 1.65, position: 'relative' }}>
+        <p style={{ fontSize: '22px', maxWidth: '420px', opacity: 0.9, lineHeight: 1.65, position: 'relative', zIndex: 1, textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>
           Tudo conectado. Tudo sob controle.<br />
           Orquestre e automatize toda a sua<br />operação em um só lugar.
         </p>
