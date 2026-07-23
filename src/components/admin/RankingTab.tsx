@@ -36,14 +36,14 @@ export function RankingTab({ orders }: { orders: any[] }) {
           ranking.map((store, index) => (
             <div key={store.name} className="ranking-item" style={{
               display: 'flex', alignItems: 'center', gap: '16px',
-              padding: '16px', backgroundColor: 'var(--md-surface)',
-              border: '1px solid var(--md-border)', marginBottom: '12px'
+              padding: '16px', backgroundColor: 'var(--card-bg)',
+              border: '1px solid var(--card-border)', marginBottom: '12px', borderRadius: 'var(--radius-md)'
             }}>
               <div className="ranking-position" style={{ 
-                backgroundColor: index < 3 ? getMedalColor(index) : 'var(--md-background)',
-                color: index < 3 ? '#fff' : 'var(--md-text-secondary)',
+                backgroundColor: index < 3 ? getMedalColor(index) : 'var(--main-bg)',
+                color: index < 3 ? '#fff' : 'var(--text-secondary)',
                 width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '0px', fontWeight: '700', fontSize: '14px'
+                borderRadius: 'var(--radius-md)', fontWeight: '700', fontSize: '14px'
               }}>
                 {index + 1}
               </div>

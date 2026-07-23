@@ -23,15 +23,15 @@ export function ZYFinancasTab({ orders }: { orders: any[] }) {
     }
   });
   const methodData = [
-    { name: 'Pix', count: methodMap.pix, fill: '#10b981' }, // emerald
-    { name: 'Cartão', count: methodMap.credit_card, fill: '#f59e0b' } // amber
+    { name: 'Pix', count: methodMap.pix, fill: '#16A34A' }, // Verde Padrão
+    { name: 'Cartão', count: methodMap.credit_card, fill: '#2563EB' } // Azul Padrão
   ];
 
   return (
     <div className="zy-financas-tab">
       <div className="admin-section-header">
         <h2>Analytics (ZYfinanças)</h2>
-        <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>Visão geral financeira</span>
+        <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Visão geral financeira</span>
       </div>
 
       <div className="charts-grid">
@@ -47,7 +47,7 @@ export function ZYFinancasTab({ orders }: { orders: any[] }) {
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} tickFormatter={(v) => `R$${v}`} />
                   <Tooltip formatter={(v: any) => [`R$ ${Number(v || 0).toFixed(2)}`, 'Receita']} />
-                  <Line type="monotone" dataKey="total" stroke="var(--md-primary)" strokeWidth={3} dot={{ r: 4, fill: 'var(--md-primary)' }} />
+                  <Line type="monotone" dataKey="total" stroke="var(--blue)" strokeWidth={3} dot={{ r: 4, fill: 'var(--blue)' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

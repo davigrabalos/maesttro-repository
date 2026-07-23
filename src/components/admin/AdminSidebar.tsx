@@ -2,6 +2,13 @@
 
 import React from 'react';
 
+export interface StoreOption {
+  id: string;
+  name: string;
+  source_id_1: string;
+  source_id_2?: string;
+}
+
 interface NavItem {
   id: string;
   label: string;
@@ -16,6 +23,13 @@ interface NavGroup {
 
 const NAV_GROUPS: NavGroup[] = [
   {
+    groupLabel: 'PAINEL',
+    groupIcon: 'dashboard',
+    items: [
+      { id: 'dashboard', label: 'Visão Geral', icon: 'grid_view' },
+    ],
+  },
+  {
     groupLabel: 'PAGAMENTOS',
     groupIcon: 'payments',
     items: [
@@ -25,7 +39,7 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    groupLabel: 'LOJAS',
+    groupLabel: 'LOJAS & CRM',
     groupIcon: 'storefront',
     items: [
       { id: 'crm', label: 'CRM Lojas', icon: 'storefront' },
@@ -42,19 +56,44 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 interface AdminSidebarProps {
+  stores: StoreOption[];
+  selectedStoreId: string;
+  onSelectStore: (storeId: string) => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
   onNotesToggle: () => void;
 }
 
-export function AdminSidebar({ activeTab, onTabChange, onNotesToggle }: AdminSidebarProps) {
+export function AdminSidebar({
+  stores,
+  selectedStoreId,
+  onSelectStore,
+  activeTab,
+  onTabChange,
+  onNotesToggle,
+}: AdminSidebarProps) {
   return (
     <aside className="admin-sidebar">
-      {/* Logo */}
-      <div className="sidebar-logo">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/icon.png" alt="Maesttro" className="sidebar-logo-icon" />
-        <span className="sidebar-logo-text">Admin</span>
+      {/* Top Store Selector */}
+      <div className="sidebar-store-selector">
+        <label className="sidebar-store-label">
+          <span className="material-symbols-outlined" style={{ fontSize: '14px', color: 'var(--md-secondary)' }}>
+            storefront
+          </span>
+          <span>SELETOR DE LOJA</span>
+        </label>
+        <select
+          className="sidebar-store-dropdown"
+          value={selectedStoreId}
+          onChange={(e) => onSelectStore(e.target.value)}
+        >
+          <option value="all">Todas as Lojas (Total)</option>
+          {stores.map((store) => (
+            <option key={store.id} value={store.id}>
+              {store.name || store.source_id_1}
+            </option>
+          ))}
+        </select>
       </div>
 
       <nav className="sidebar-nav">
@@ -75,7 +114,6 @@ export function AdminSidebar({ activeTab, onTabChange, onNotesToggle }: AdminSid
                     onTabChange(item.id);
                   }
                 }}
-                title={item.label}
               >
                 <span className="material-symbols-outlined sidebar-item-icon">{item.icon}</span>
                 <span className="sidebar-item-label">{item.label}</span>
@@ -85,7 +123,7 @@ export function AdminSidebar({ activeTab, onTabChange, onNotesToggle }: AdminSid
         ))}
       </nav>
 
-      {/* Bottom Version */}
+      {/* Footer info */}
       <div className="sidebar-footer">
         <span className="material-symbols-outlined" style={{ fontSize: '14px', opacity: 0.5 }}>info</span>
         <span className="sidebar-footer-text">Maesttro v1.0</span>

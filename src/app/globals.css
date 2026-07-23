@@ -1,78 +1,86 @@
 @import "./checkout.css";
 
 :root {
-  /* Cyber Coral — Light Mode */
-  --md-primary: #0F4C81;           /* Azul Petróleo / Clássico */
-  --md-primary-variant: #0A3358;   /* Petróleo Escuro */
-  --md-primary-light: #E0F2FE;     /* Sky Light Tint */
-  
-  --md-secondary: #FF6B6B;         /* Coral Neon Vibrante */
-  --md-secondary-variant: #EE5253; /* Coral Escuro */
-  --md-secondary-light: #FFE5E5;   /* Coral Light Tint */
-  
-  --md-background: #EAE9E4;        /* Off-White Escuro Elegante */
-  --md-surface: #F4F3EE;           /* Cards Off-White */
-  --md-border: #D1D5DB;            /* Divisores Visíveis */
-  
-  --md-error: #D63031;             /* Vermelho Vivo */
-  --md-success: #00B894;           /* Verde Turquesa */
-  --md-warning: #FDCB6E;           /* Amarelo Mostarda */
-  --md-info: #A29BFE;              /* Lavanda */
-  
-  --md-on-primary: #FFFFFF;
-  --md-on-secondary: #FFFFFF;
-  --md-on-background: #1A202C;     /* Texto Principal Escuro */
-  --md-on-surface: #1A202C;
-  --md-text-secondary: #718096;    /* Texto Secundário */
-  --md-text-primary: #1A202C;
+  /* ==========================================================================
+     PALETA DE CORES SIMPLES E PADRONIZADA (AZUL, VERMELHO, VERDE, AMARELO)
+     ========================================================================== */
 
-  /* Sharp Geometry (Zero Border Radius) */
-  --md-shape-small: 0px;
-  --md-shape-medium: 0px;
-  --md-shape-large: 0px;
+  /* 1. CORES BASE SIMPLES */
+  --blue: #2563EB;                 /* Azul Padrão */
+  --blue-light: #EFF6FF;           /* Azul Claro */
+  --red: #DC2626;                  /* Vermelho Padrão */
+  --red-light: #FEE2E2;            /* Vermelho Claro */
+  --green: #16A34A;                /* Verde Padrão */
+  --green-light: #DCFCE7;          /* Verde Claro */
+  --yellow: #D97706;               /* Amarelo Padrão */
+  --yellow-light: #FEF3C7;         /* Amarelo Claro */
 
-  /* Flat Surface - No Shadows/Glows */
-  --md-elevation-1: none;
-  --md-elevation-2: none;
-  --md-elevation-3: none;
+  /* 2. NEUTROS */
+  --black: #111827;                /* Escuro / Preto */
+  --white: #FFFFFF;                /* Branco */
+  --gray-bg: #F9FAFB;              /* Fundo Cinza Claro */
+  --gray-hover: #F3F4F6;           /* Fundo Hover */
+  --gray-border: #E5E7EB;          /* Borda Cinza */
+  --gray-text-sub: #4B5563;        /* Texto Secundário */
+  --gray-text-muted: #9CA3AF;      /* Texto Desbotado */
 
-  /* Transitions */
+  /* 3. NAVBARS & ESTRUTURA */
+  --topbar-bg: var(--black);       /* Navbar Superior Escura */
+  --topbar-text: var(--white);
+  --topbar-text-muted: var(--gray-text-muted);
+  --topbar-search-bg: rgba(255, 255, 255, 0.1);
+  --topbar-search-border: rgba(255, 255, 255, 0.2);
+
+  --sidebar-bg: var(--white);      /* Navbar Lateral em Branco */
+  --sidebar-border: var(--gray-border);
+  --sidebar-text: var(--black);
+  --sidebar-text-muted: var(--gray-text-sub);
+  --sidebar-hover-bg: var(--gray-hover);
+  --sidebar-active-bg: var(--blue-light);
+  --sidebar-active-text: var(--blue);
+  --sidebar-active-border: var(--blue);
+
+  /* 4. CONTEÚDO PRINCIPAL & CARDS */
+  --main-bg: var(--gray-bg);
+  --card-bg: var(--white);
+  --card-border: var(--gray-border);
+  
+  --text-primary: var(--black);
+  --text-secondary: var(--gray-text-sub);
+  --text-muted: var(--gray-text-muted);
+
+  --accent-primary: var(--blue);   /* Destaque Principal Azul */
+  --accent-secondary: var(--red);  /* Destaque Secundário Vermelho */
+  
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Variáveis de Compatibilidade Legada */
+  --md-primary: var(--blue);
+  --md-primary-variant: #1D4ED8;
+  --md-primary-light: var(--blue-light);
+  --md-secondary: var(--red);
+  --md-secondary-variant: #B91C1C;
+  --md-background: var(--main-bg);
+  --md-surface: var(--card-bg);
+  --md-border: var(--card-border);
+  --md-on-background: var(--text-primary);
+  --md-on-surface: var(--text-primary);
+  --md-text-primary: var(--text-primary);
+  --md-text-secondary: var(--text-secondary);
+  --md-error: var(--red);
+  --md-success: var(--green);
+  --md-warning: var(--yellow);
+  --md-info: var(--blue);
   --md-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --md-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[data-theme="dark"] {
-  /* Cyber Coral — Dark Mode */
-  --md-primary: #0F4C81;
-  --md-primary-variant: #0A3358;
-  --md-primary-light: #1A2332;
-  
-  --md-secondary: #FF6B6B;
-  --md-secondary-variant: #EE5253;
-  --md-secondary-light: #3D1F24;
-  
-  --md-background: #121824;        /* Graphite Black */
-  --md-surface: #1A2332;           /* Cards Escuros */
-  --md-border: #2D3748;            /* Divisores Escuros */
-  
-  --md-error: #D63031;
-  --md-success: #00B894;
-  --md-warning: #FDCB6E;
-  --md-info: #A29BFE;
-  
-  --md-on-primary: #FFFFFF;
-  --md-on-secondary: #FFFFFF;
-  --md-on-background: #F7FAFC;     /* Texto Principal Claro */
-  --md-on-surface: #F7FAFC;
-  --md-text-secondary: #A0AEC0;    /* Texto Secundário Claro */
-  --md-text-primary: #F7FAFC;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border-radius: 0 !important;
 }
 
 /* Global Focus Ring - Sharp Solid Outline */
@@ -82,21 +90,21 @@
 }
 
 body {
-  font-family: 'Space Grotesk', 'Space Mono', sans-serif;
-  font-size: 15px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.2px;
   background-color: var(--md-background);
   color: var(--md-on-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 input, select, textarea {
   color: var(--md-on-surface);
   background-color: var(--md-surface);
-  border-radius: 0 !important;
+  border-radius: 8px;
 }
 
 input::placeholder, textarea::placeholder {
@@ -109,33 +117,33 @@ a {
   text-decoration: none;
 }
 
-/* Typography - Diminuído proporcionalmente */
+/* Typography - Padrão dashboard agradável */
 h1 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
   text-transform: none;
   color: var(--md-on-background);
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
   text-transform: none;
   color: var(--md-on-background);
 }
 
 h3, h4, h5, h6 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
   text-transform: none;
   color: var(--md-on-background);
 }
 
 p, span, div, input, button {
-  font-family: 'Space Grotesk', monospace;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* Base Button - Fonte 14px e altura 48px (Touch Target) com Cantos Retos (0px) */
@@ -147,7 +155,7 @@ p, span, div, input, button {
   min-height: 48px;
   min-width: 64px;
   border: 1px solid var(--md-border);
-  border-radius: 0 !important;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -162,7 +170,7 @@ p, span, div, input, button {
   background-color: var(--md-secondary);
   color: var(--md-on-secondary);
   border: 1px solid var(--md-secondary-variant);
-  border-radius: 0 !important;
+  border-radius: 8px;
 }
 
 .md-btn-primary:hover {
@@ -177,7 +185,7 @@ p, span, div, input, button {
   background-color: transparent;
   color: var(--md-primary);
   border: 1px solid var(--md-primary);
-  border-radius: 0 !important;
+  border-radius: 8px;
 }
 
 .md-btn-outlined:hover {
@@ -188,7 +196,7 @@ p, span, div, input, button {
 .md-surface {
   background-color: var(--md-surface);
   color: var(--md-on-surface);
-  border-radius: 0 !important;
+  border-radius: 8px;
   box-shadow: none !important;
   padding: 32px;
   border: 1px solid var(--md-border);
@@ -197,7 +205,7 @@ p, span, div, input, button {
 .md-card-group {
   background-color: var(--md-surface);
   color: var(--md-on-surface);
-  border-radius: 0 !important;
+  border-radius: 8px;
   box-shadow: none !important;
   padding: 24px;
   border: 1px solid var(--md-border);
@@ -229,9 +237,9 @@ p, span, div, input, button {
   height: 52px;
   padding: 18px 16px 4px;
   border: 1px solid var(--md-border);
-  border-radius: 0 !important;
+  border-radius: 8px;
   background-color: var(--md-surface);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 15px;
   color: var(--md-on-background);
   transition: border-color var(--md-transition-fast);

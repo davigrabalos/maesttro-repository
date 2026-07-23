@@ -7,7 +7,7 @@ import { RankingTab } from '../../components/admin/RankingTab';
 import { CRMTab } from '../../components/admin/CRMTab';
 import { ProofModal } from '../../components/admin/ProofModal';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
-import { ThemeToggle } from '../../components/ui/ThemeToggle';
+import { AdminHeader } from '../../components/admin/AdminHeader';
 
 interface PixProof {
   id: string;
@@ -82,6 +82,9 @@ export default function AdminPage() {
   const [filterText, setFilterText] = useState('');
   const [isListening, setIsListening] = useState(false);
 
+  // Store selector filter state
+  const [selectedStoreId, setSelectedStoreId] = useState<string>('all');
+
   // Modal Proof State
   const [selectedOrderForProof, setSelectedOrderForProof] = useState<Order | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
@@ -131,15 +134,20 @@ export default function AdminPage() {
     }
   };
 
-  const totalRevenue = orders.filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0);
-  const pendingCount = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-  const paidCount = orders.filter(o => o.status === 'paid').length;
-  const proofCount = orders.reduce((s, o) => s + o.pix_proofs.length, 0);
+  const storeFilteredOrders = useMemo(() => {
+    if (selectedStoreId === 'all') return orders;
+    return orders.filter(o => o.store?.source_id === selectedStoreId || (o.store as any)?.id === selectedStoreId);
+  }, [orders, selectedStoreId]);
+
+  const totalRevenue = storeFilteredOrders.filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0);
+  const pendingCount = storeFilteredOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+  const paidCount = storeFilteredOrders.filter(o => o.status === 'paid').length;
+  const proofCount = storeFilteredOrders.reduce((s, o) => s + o.pix_proofs.length, 0);
 
   const filteredOrders = useMemo(() => {
     const base = activeTab === 'approved'
-      ? orders.filter(o => o.status === 'paid')
-      : orders;
+      ? storeFilteredOrders.filter(o => o.status === 'paid')
+      : storeFilteredOrders;
     if (!filterText) return base;
     const lower = filterText.toLowerCase();
     return base.filter(o =>
@@ -148,7 +156,7 @@ export default function AdminPage() {
       o.payment_method.toLowerCase().includes(lower) ||
       (o.store?.name && o.store.name.toLowerCase().includes(lower))
     );
-  }, [orders, filterText, activeTab]);
+  }, [storeFilteredOrders, filterText, activeTab]);
 
   const startVoiceSearch = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -168,64 +176,89 @@ export default function AdminPage() {
 
   return (
     <div className="admin-layout">
-      {/* Sidebar */}
-      <AdminSidebar
-        activeTab={activeTab}
-        onTabChange={(tab) => setActiveTab(tab as TabId)}
-        onNotesToggle={() => window.dispatchEvent(new Event('toggle_global_keep_notes'))}
+      {/* Red Top Navbar */}
+      <AdminHeader
+        filterText={filterText}
+        onFilterChange={setFilterText}
+        isListening={isListening}
+        onVoiceSearch={startVoiceSearch}
+        lastRefresh={lastRefresh}
+        onRefresh={fetchData}
+        loading={loading}
       />
 
-      {/* Body: Topbar + Main */}
-      <div className="admin-body">
-        {/* Topbar Fina */}
-        <div className="admin-topbar">
-          <ThemeToggle />
-          <span className="admin-topbar-info">
-            Atualizado: {formatDate(lastRefresh.toISOString())}
-          </span>
-          <button className="admin-refresh-btn" onClick={fetchData} disabled={loading}
-            style={{ border: '1px solid var(--md-border)', color: 'var(--md-text-primary)', backgroundColor: 'transparent' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '14px', animation: loading ? 'spin 1s linear infinite' : 'none' }}>
-              {loading ? 'sync' : 'refresh'}
-            </span>
-            <span>{loading ? 'Carregando...' : 'Atualizar'}</span>
-          </button>
-        </div>
+      <div className="admin-container">
+        {/* Fixed Sidebar with Store Selector */}
+        <AdminSidebar
+          stores={stores}
+          selectedStoreId={selectedStoreId}
+          onSelectStore={setSelectedStoreId}
+          activeTab={activeTab}
+          onTabChange={(tab) => setActiveTab(tab as TabId)}
+          onNotesToggle={() => window.dispatchEvent(new Event('toggle_global_keep_notes'))}
+        />
+
+        {/* Body Main */}
+        <div className="admin-body">
 
         <main className="admin-main">
+          <h1 className="admin-greeting">Olá, Davi!</h1>
+          
           {/* Metrics Overview */}
-          <div className="admin-metrics">
+          <div className="admin-metrics-primary">
             <div className="admin-metric-card">
-              <div className="admin-metric-label">
-                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>shopping_cart</span>
-                Total de Pedidos
+              <div className="admin-metric-value">
+                <span className="material-symbols-outlined" style={{ color: 'var(--accent-primary)', fontSize: '12px' }}>circle</span>
+                {orders.length * 3}
               </div>
-              <div className="admin-metric-value">{orders.length}</div>
-              <div className="admin-metric-sub">{pendingCount} aguardando/em análise</div>
+              <div className="admin-metric-label">Visitantes online agora</div>
             </div>
             <div className="admin-metric-card">
-              <div className="admin-metric-label">
-                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>payments</span>
-                Receita Confirmada
+              <div className="admin-metric-value">
+                <span className="material-symbols-outlined" style={{ color: 'var(--text-muted)', fontSize: '20px' }}>payments</span>
+                {formatCurrency(totalRevenue)}
+                <span className="admin-metric-sub" style={{ color: 'var(--text-primary)' }}>-%▴</span>
               </div>
-              <div className="admin-metric-value" style={{ color: 'var(--md-secondary)', fontWeight: 900 }}>{formatCurrency(totalRevenue)}</div>
-              <div className="admin-metric-sub">{paidCount} pedidos pagos</div>
+              <div className="admin-metric-label">Valor em pedidos hoje</div>
             </div>
             <div className="admin-metric-card">
-              <div className="admin-metric-label">
-                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>storefront</span>
-                Lojas Ativas
+              <div className="admin-metric-value">
+                <span className="material-symbols-outlined" style={{ color: 'var(--text-muted)', fontSize: '20px' }}>shopping_bag</span>
+                {orders.length}
+                <span className="admin-metric-sub" style={{ color: 'var(--text-primary)' }}>-%▴</span>
               </div>
-              <div className="admin-metric-value">{stores.filter(s => s.active).length}</div>
-              <div className="admin-metric-sub">{stores.length} total cadastradas</div>
+              <div className="admin-metric-label">Pedidos hoje</div>
             </div>
-            <div className="admin-metric-card">
-              <div className="admin-metric-label">
-                <span className="material-symbols-outlined" style={{ fontSize: '13px', verticalAlign: 'middle', marginRight: '4px' }}>attach_file</span>
-                Comprovantes
+          </div>
+
+          <div className="admin-metrics-secondary">
+            <div className="admin-metric-card" style={{ padding: '16px' }}>
+              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>shopping_cart</span>
+                {pendingCount}
               </div>
-              <div className="admin-metric-value">{proofCount}</div>
-              <div className="admin-metric-sub">enviados pelos clientes</div>
+              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Carrinhos para recuperar</div>
+            </div>
+            <div className="admin-metric-card" style={{ padding: '16px' }}>
+              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span>
+                {pendingCount}
+              </div>
+              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Pagamentos pendentes</div>
+            </div>
+            <div className="admin-metric-card" style={{ padding: '16px' }}>
+              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>warning</span>
+                0
+              </div>
+              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Falhas em pagamentos</div>
+            </div>
+            <div className="admin-metric-card" style={{ padding: '16px' }}>
+              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
+                0
+              </div>
+              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Com estoque baixo</div>
             </div>
           </div>
 
@@ -245,23 +278,23 @@ export default function AdminPage() {
                   </span>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <input
-                    type="text"
-                    value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)}
-                    placeholder="Pesquisar (Pix, e-mail...)"
-                    style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--md-border)', backgroundColor: 'var(--md-surface)', color: 'var(--md-on-surface)', borderRadius: '0px' }}
-                  />
-                  <button
-                    onClick={startVoiceSearch}
-                    style={{
-                      padding: '8px', backgroundColor: isListening ? '#EF4444' : 'var(--md-surface)',
-                      border: '1px solid var(--md-border)', borderRadius: '0px',
-                      color: isListening ? '#fff' : 'var(--md-text-secondary)', cursor: 'pointer',
-                      display: 'flex', alignItems: 'center'
-                    }}
-                    title="Pesquisa por voz"
-                  >
+                    <input
+                      type="text"
+                      value={filterText}
+                      onChange={(e) => setFilterText(e.target.value)}
+                      placeholder="Pesquisar (Pix, e-mail...)"
+                      style={{ padding: '8px 12px', fontSize: '12px', border: '1px solid var(--card-border)', backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)' }}
+                    />
+                    <button
+                      onClick={startVoiceSearch}
+                      style={{
+                        padding: '8px', backgroundColor: isListening ? '#EF4444' : 'var(--card-bg)',
+                        border: '1px solid var(--card-border)', borderRadius: 'var(--radius-md)',
+                        color: isListening ? '#fff' : 'var(--text-primary)', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center'
+                      }}
+                      title="Pesquisa por voz"
+                    >
                     <span className="material-symbols-outlined" style={{ fontSize: '16px', animation: isListening ? 'pulse 1s infinite' : 'none' }}>mic</span>
                   </button>
                 </div>
@@ -308,8 +341,7 @@ export default function AdminPage() {
                             <td>
                               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                 {order.payment_method === 'pix' ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img src="/images/pix.png" alt="Pix" className="pix-icon-img" style={{ height: '10px' }} />
+                                  <span className="pix-icon-img" />
                                 ) : (
                                   <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>credit_card</span>
                                 )}
@@ -321,8 +353,8 @@ export default function AdminPage() {
                               {hasProof ? (
                                 <span style={{
                                   display: 'inline-flex', alignItems: 'center', gap: '4px',
-                                  padding: '3px 8px', borderRadius: '0px', fontSize: '10px', fontWeight: 700,
-                                  backgroundColor: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0'
+                                  padding: '3px 8px', borderRadius: 'var(--radius-sm)', fontSize: '10px', fontWeight: 700,
+                                  backgroundColor: 'var(--green-light)', color: 'var(--green)', border: '1px solid rgba(22, 163, 74, 0.3)'
                                 }}>
                                   <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>verified</span>
                                   Match 100%
@@ -355,8 +387,8 @@ export default function AdminPage() {
                                     disabled={actionLoading}
                                     onClick={() => handleUpdateStatus(order.id, 'paid')}
                                     style={{
-                                      padding: '4px 8px', backgroundColor: '#10B981', color: '#fff',
-                                      border: 'none', borderRadius: '0px', fontSize: '11px', fontWeight: 700,
+                                      padding: '4px 8px', backgroundColor: 'var(--green)', color: '#fff',
+                                      border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '11px', fontWeight: 700,
                                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '2px'
                                     }}
                                     title="Aprovar"
@@ -368,8 +400,8 @@ export default function AdminPage() {
                                     disabled={actionLoading}
                                     onClick={() => handleUpdateStatus(order.id, 'failed')}
                                     style={{
-                                      padding: '4px 6px', backgroundColor: '#EF4444', color: '#fff',
-                                      border: 'none', borderRadius: '0px', fontSize: '11px', fontWeight: 700,
+                                      padding: '4px 6px', backgroundColor: 'var(--red)', color: '#fff',
+                                      border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '11px', fontWeight: 700,
                                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center'
                                     }}
                                     title="Rejeitar"
@@ -378,7 +410,7 @@ export default function AdminPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <span style={{ fontSize: '11px', color: 'var(--green)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                   <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>done_all</span>
                                   Concluído
                                 </span>
@@ -405,6 +437,7 @@ export default function AdminPage() {
           updating={actionLoading}
         />
       )}
+    </div>
     </div>
   );
 }
