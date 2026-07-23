@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET() {
   try {
+    const supabase = await createClient();
+    
+    // RLS will automatically filter orders the user has access to
     const { data: orders, error } = await supabase
       .from('orders')
       .select(`
@@ -13,6 +16,7 @@ export async function GET() {
         status,
         payment_method,
         created_at,
+        workspace_id,
         store:stores (
           id,
           name,
@@ -39,3 +43,4 @@ export async function GET() {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+

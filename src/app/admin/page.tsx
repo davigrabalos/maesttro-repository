@@ -77,6 +77,7 @@ export type TabId = 'dashboard' | 'orders' | 'approved' | 'zyfinancas' | 'rankin
 export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [stores, setStores] = useState<StoreData[]>([]);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
@@ -96,14 +97,17 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [ordersRes, storesRes] = await Promise.all([
+      const [ordersRes, storesRes, profileRes] = await Promise.all([
         fetch('/api/admin/orders'),
         fetch('/api/admin/stores'),
+        fetch('/api/admin/profile'),
       ]);
       const ordersData = await ordersRes.json();
       const storesData = await storesRes.json();
+      const profileData = await profileRes.json();
       if (ordersData.orders) setOrders(ordersData.orders);
       if (storesData.stores) setStores(storesData.stores);
+      if (profileData.user) setProfile(profileData.user);
       setLastRefresh(new Date());
     } catch (err) {
       console.error('Failed to fetch admin data', err);
@@ -187,6 +191,7 @@ export default function AdminPage() {
         onRefresh={fetchData}
         loading={loading}
         orders={orders}
+        profile={profile}
       />
 
       <div className="admin-container">

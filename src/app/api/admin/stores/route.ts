@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET() {
   try {
+    const supabase = await createClient();
+    
+    // RLS will automatically filter stores the user has access to
     const { data: stores, error } = await supabase
       .from('stores')
       .select(`
@@ -12,6 +15,7 @@ export async function GET() {
         source_id_2,
         active,
         created_at,
+        workspace_id,
         orders (count)
       `)
       .order('created_at', { ascending: false });
@@ -30,16 +34,18 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const supabase = await createClient();
     const body = await request.json();
-    const { name, source_id_1, source_id_2 } = body;
+    const { name, source_id_1, source_id_2, workspace_id } = body;
 
-    if (!name || !source_id_1) {
-      return NextResponse.json({ error: 'Name and source_id_1 are required' }, { status: 400 });
+    if (!name || !source_id_1 || !workspace_id) {
+      return NextResponse.json({ error: 'Name, source_id_1 and workspace_id are required' }, { status: 400 });
     }
 
     const payload = { 
       name, 
-      source_id_1, 
+      source_id_1,
+      workspace_id,
       active: true,
       ...(source_id_2 && { source_id_2 })
     };

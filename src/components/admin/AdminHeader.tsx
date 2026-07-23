@@ -12,6 +12,7 @@ interface AdminHeaderProps {
   onRefresh: () => void;
   loading: boolean;
   orders: any[];
+  profile?: any;
 }
 
 export function AdminHeader({
@@ -23,7 +24,9 @@ export function AdminHeader({
   onRefresh,
   loading,
   orders,
+  profile,
 }: AdminHeaderProps) {
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [osShortcut, setOsShortcut] = useState('⌘K');
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -175,8 +178,17 @@ export function AdminHeader({
         </Link>
 
         {/* User Profile Avatar */}
-        <div className="topbar-profile-avatar" title="Minha Conta (Administrador)">
-          <span>AD</span>
+        <div className="topbar-profile-avatar" title={profile?.profile?.full_name || "Minha Conta"} style={
+          profile?.profile?.avatar_url ? {
+            backgroundImage: `url(${profile.profile.avatar_url})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: 'transparent'
+          } : {}
+        }>
+          {!profile?.profile?.avatar_url ? (
+            <span>{profile?.profile?.full_name ? profile.profile.full_name.substring(0, 2).toUpperCase() : 'AD'}</span>
+          ) : null}
         </div>
       </div>
     </header>
