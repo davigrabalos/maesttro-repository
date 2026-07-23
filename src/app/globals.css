@@ -56,6 +56,11 @@
   --radius-md: 8px;
   --radius-lg: 12px;
 
+  /* 5. TYPOGRAPHY */
+  --font-brand: 'Barriecito', cursive;
+  --font-sans: 'Google Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
   /* Variáveis de Compatibilidade Legada */
   --md-primary: var(--blue);
   --md-primary-variant: #1D4ED8;
@@ -90,7 +95,7 @@
 }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 400;
   letter-spacing: -0.2px;
@@ -142,8 +147,8 @@ h3, h4, h5, h6 {
   color: var(--md-on-background);
 }
 
-p, span, div, input, button {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+p, span, div, input, button, textarea, select {
+  font-family: var(--font-sans);
 }
 
 /* Base Button - Fonte 14px e altura 48px (Touch Target) com Cantos Retos (0px) */
@@ -239,7 +244,7 @@ p, span, div, input, button {
   border: 1px solid var(--md-border);
   border-radius: 8px;
   background-color: var(--md-surface);
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 15px;
   color: var(--md-on-background);
   transition: border-color var(--md-transition-fast);

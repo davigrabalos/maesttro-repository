@@ -5,7 +5,8 @@ import React, { useState } from 'react';
 export function CRMTab({ stores }: { stores: any[] }) {
   const [isCreating, setIsCreating] = useState(false);
   const [newName, setNewName] = useState('');
-  const [newSourceId, setNewSourceId] = useState('');
+  const [newSourceId1, setNewSourceId1] = useState('');
+  const [newSourceId2, setNewSourceId2] = useState('');
 
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +18,7 @@ export function CRMTab({ stores }: { stores: any[] }) {
       const res = await fetch('/api/admin/stores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newName, source_id: newSourceId })
+        body: JSON.stringify({ name: newName, source_id_1: newSourceId1, source_id_2: newSourceId2 })
       });
       
       const data = await res.json();
@@ -30,7 +31,8 @@ export function CRMTab({ stores }: { stores: any[] }) {
       alert(`Loja "${data.store.name}" criada com sucesso! Você pode atualizar a página para que ela apareça na lista.`);
       setIsCreating(false);
       setNewName('');
-      setNewSourceId('');
+      setNewSourceId1('');
+      setNewSourceId2('');
     } catch (err) {
       alert('Erro de conexão ao criar loja.');
     } finally {
@@ -73,14 +75,24 @@ export function CRMTab({ stores }: { stores: any[] }) {
               />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>Source ID (Link Único)</label>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>Integração 1 (Source ID)</label>
               <input 
                 type="text" 
-                value={newSourceId} 
-                onChange={e => setNewSourceId(e.target.value)} 
+                value={newSourceId1} 
+                onChange={e => setNewSourceId1(e.target.value)} 
                 required 
                 style={{ width: '100%', padding: '10px', border: '1px solid var(--card-border)', backgroundColor: 'var(--main-bg)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)' }}
-                placeholder="Ex: instaloja"
+                placeholder="Ex: loja-google"
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>Integração 2 (Source ID - Opcional)</label>
+              <input 
+                type="text" 
+                value={newSourceId2} 
+                onChange={e => setNewSourceId2(e.target.value)} 
+                style={{ width: '100%', padding: '10px', border: '1px solid var(--card-border)', backgroundColor: 'var(--main-bg)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)' }}
+                placeholder="Ex: loja-facebook"
               />
             </div>
           </div>
@@ -104,19 +116,37 @@ export function CRMTab({ stores }: { stores: any[] }) {
               </span>
             </div>
             <h3 style={{ fontSize: '13px', marginBottom: '4px', color: 'var(--text-primary)' }}>{store.name}</h3>
-            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-              source: <code style={{ backgroundColor: 'var(--main-bg)', color: 'var(--text-primary)', padding: '1px 4px', borderRadius: 'var(--radius-sm)' }}>{store.source_id}</code>
-            </p>
-            <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '12px' }}>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: 0 }}>
+                Int 1: <code style={{ backgroundColor: 'var(--main-bg)', color: 'var(--text-primary)', padding: '1px 4px', borderRadius: 'var(--radius-sm)' }}>{store.source_id_1}</code>
+              </p>
+              {store.source_id_2 && (
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: 0 }}>
+                  Int 2: <code style={{ backgroundColor: 'var(--main-bg)', color: 'var(--text-primary)', padding: '1px 4px', borderRadius: 'var(--radius-sm)' }}>{store.source_id_2}</code>
+                </p>
+              )}
+            </div>
+            <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <a
-                href={`/checkout/demo?source=${store.source_id}`}
+                href={`/checkout/${store.source_id_1}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ fontSize: '11px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>open_in_new</span>
-                Abrir link do checkout
+                Abrir Checkout (Integração 1)
               </a>
+              {store.source_id_2 && (
+                <a
+                  href={`/checkout/${store.source_id_2}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: '11px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>open_in_new</span>
+                  Abrir Checkout (Integração 2)
+                </a>
+              )}
             </div>
           </div>
         ))}

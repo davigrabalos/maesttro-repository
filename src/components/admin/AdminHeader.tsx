@@ -11,6 +11,7 @@ interface AdminHeaderProps {
   lastRefresh: Date;
   onRefresh: () => void;
   loading: boolean;
+  orders: any[];
 }
 
 export function AdminHeader({
@@ -21,6 +22,7 @@ export function AdminHeader({
   lastRefresh,
   onRefresh,
   loading,
+  orders,
 }: AdminHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [osShortcut, setOsShortcut] = useState('⌘K');
@@ -50,6 +52,35 @@ export function AdminHeader({
     { id: 3, title: 'Notícia de Sistema', desc: 'Relatórios de ZYfinanças sincronizados.', time: 'Há 2 dias' },
   ];
 
+  // Calculate Gamified Level
+  const LEVELS = [
+    { id: 'iniciante', name: 'Iniciante', threshold: 0, color: '#9CA3AF' },
+    { id: 'bronze', name: 'Bronze', threshold: 5000, color: '#B45309' },
+    { id: 'prata', name: 'Prata', threshold: 25000, color: '#D1D5DB' },
+    { id: 'ouro', name: 'Ouro', threshold: 100000, color: '#F59E0B' },
+    { id: 'diamante', name: 'Diamante', threshold: 500000, color: '#3B82F6' },
+  ];
+
+  const totalRevenue = orders.reduce((sum, o) => {
+    return o.status === 'paid' ? sum + o.amount : sum;
+  }, 0);
+
+  let currentLevelIndex = 0;
+  for (let i = 0; i < LEVELS.length; i++) {
+    if (totalRevenue >= LEVELS[i].threshold) {
+      currentLevelIndex = i;
+    } else {
+      break;
+    }
+  }
+
+  const currentLevel = LEVELS[currentLevelIndex];
+  const nextLevel = currentLevelIndex < LEVELS.length - 1 ? LEVELS[currentLevelIndex + 1] : null;
+
+  const progressPercentage = nextLevel 
+    ? Math.min(100, Math.max(0, ((totalRevenue - currentLevel.threshold) / (nextLevel.threshold - currentLevel.threshold)) * 100))
+    : 100;
+
   return (
     <header className="admin-red-topbar">
       {/* Brand Logo & Name */}
@@ -75,13 +106,22 @@ export function AdminHeader({
           className={`topbar-voice-btn ${isListening ? 'listening' : ''}`}
           title="Pesquisa por voz"
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>mic</span>
+          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>mic</span>
         </button>
         <kbd className="topbar-shortcut-badge">{osShortcut}</kbd>
       </div>
 
-      {/* Right Controls: Notifications, Help, Profile */}
+      {/* Right Controls: Ranking, Notifications, Help, Profile */}
       <div className="topbar-actions">
+        {/* Ranking Progress */}
+        <div className="topbar-ranking-progress" title={`Nível ${currentLevel.name}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginRight: '16px' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '22px', color: currentLevel.color }}>emoji_events</span>
+          <div style={{ width: '90px', height: '8px', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: `${progressPercentage}%`, height: '100%', backgroundColor: currentLevel.color, borderRadius: '4px' }} />
+          </div>
+          <span style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>Nv. {currentLevelIndex + 1}</span>
+        </div>
+
         {/* Refresh button */}
         <button
           className="topbar-icon-btn"
@@ -91,7 +131,7 @@ export function AdminHeader({
         >
           <span
             className="material-symbols-outlined"
-            style={{ fontSize: '20px', animation: loading ? 'spin 1s linear infinite' : 'none' }}
+            style={{ fontSize: '22px', animation: loading ? 'spin 1s linear infinite' : 'none' }}
           >
             {loading ? 'sync' : 'refresh'}
           </span>
@@ -104,7 +144,7 @@ export function AdminHeader({
             onClick={() => setShowNotifications(!showNotifications)}
             title="Notificações & Notícias"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>notifications</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>notifications</span>
             <span className="topbar-badge-dot" />
           </button>
 
@@ -131,7 +171,7 @@ export function AdminHeader({
 
         {/* Help Icon (Q&A) */}
         <Link href="/qa" className="topbar-icon-btn" title="Central de Ajuda (Q&A)">
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>help</span>
+          <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>help</span>
         </Link>
 
         {/* User Profile Avatar */}

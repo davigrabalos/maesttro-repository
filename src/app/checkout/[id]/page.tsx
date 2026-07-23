@@ -1,21 +1,27 @@
 import React from 'react';
 import { CheckoutClientWrapper } from '@/components/checkout/CheckoutClientWrapper';
+import { supabase } from '@/lib/supabase';
+import { notFound } from 'next/navigation';
 
 export default async function CheckoutPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ source?: string }>;
 }) {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
-  
-  const checkoutId = resolvedParams.id;
-  const source = resolvedSearchParams.source || 'default';
+  const sourceId = resolvedParams.id;
 
-  // In a real scenario, fetch store configuration from Supabase using checkoutId + source
-  const storeName = source === 'lojaA' ? 'Loja Principal (Facebook)' : 'Loja Secundária (Google)';
+  // Fetch store configuration from Supabase using sourceId
+  const { data: store, error } = await supabase
+    .from('stores')
+    .select('id, name, source_id_1, source_id_2')
+    .or(`source_id_1.eq.${sourceId},source_id_2.eq.${sourceId}`)
+    .single();
+
+  if (error || !store) {
+    console.error('Store not found for sourceId:', sourceId);
+    notFound();
+  }
   
   return (
     <div className="checkout-layout">
@@ -29,12 +35,12 @@ export default async function CheckoutPage({
             style={{ height: '40px', objectFit: 'contain' }} 
           />
         </div>
-        <h1 style={{ marginBottom: '8px', fontSize: '24px' }}>Checkout - {storeName}</h1>
+        <h1 style={{ marginBottom: '8px', fontSize: '24px' }}>Checkout - {store.name}</h1>
         <p style={{ marginBottom: '32px', color: 'var(--md-text-secondary)', fontSize: '13px' }}>
-          Finalize sua compra com segurança na Maesttro. (ID: {checkoutId})
+          Finalize sua compra com segurança na Maesttro. (Integração: {sourceId})
         </p>
         
-        <CheckoutClientWrapper source={source} checkoutId={checkoutId} />
+        <CheckoutClientWrapper source={sourceId} checkoutId={store.id} />
       </div>
       
       <div className="checkout-right">

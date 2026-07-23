@@ -14,8 +14,10 @@ export async function GET() {
         payment_method,
         created_at,
         store:stores (
+          id,
           name,
-          source_id
+          source_id_1,
+          source_id_2
         ),
         pix_proofs (
           id,

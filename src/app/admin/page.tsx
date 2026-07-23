@@ -8,6 +8,7 @@ import { CRMTab } from '../../components/admin/CRMTab';
 import { ProofModal } from '../../components/admin/ProofModal';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
 import { AdminHeader } from '../../components/admin/AdminHeader';
+import { DashboardTab } from '../../components/admin/DashboardTab';
 
 interface PixProof {
   id: string;
@@ -16,8 +17,10 @@ interface PixProof {
 }
 
 interface Store {
+  id: string;
   name: string;
-  source_id: string;
+  source_id_1: string;
+  source_id_2?: string;
 }
 
 interface Order {
@@ -35,7 +38,8 @@ interface Order {
 interface StoreData {
   id: string;
   name: string;
-  source_id: string;
+  source_id_1: string;
+  source_id_2?: string;
   active: boolean;
   created_at: string;
   orders: { count: number }[];
@@ -68,14 +72,14 @@ function formatDate(dateStr: string) {
   }).format(new Date(dateStr));
 }
 
-type TabId = 'orders' | 'approved' | 'zyfinancas' | 'ranking' | 'crm' | 'notes';
+export type TabId = 'dashboard' | 'orders' | 'approved' | 'zyfinancas' | 'ranking' | 'crm' | 'notes';
 
 export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [stores, setStores] = useState<StoreData[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
-  const [activeTab, setActiveTab] = useState<TabId>('orders');
+  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [notesOpen, setNotesOpen] = useState(false);
   
   // Voice search & filter
@@ -136,12 +140,9 @@ export default function AdminPage() {
 
   const storeFilteredOrders = useMemo(() => {
     if (selectedStoreId === 'all') return orders;
-    return orders.filter(o => o.store?.source_id === selectedStoreId || (o.store as any)?.id === selectedStoreId);
+    return orders.filter(o => o.store?.id === selectedStoreId);
   }, [orders, selectedStoreId]);
 
-  const totalRevenue = storeFilteredOrders.filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0);
-  const pendingCount = storeFilteredOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-  const paidCount = storeFilteredOrders.filter(o => o.status === 'paid').length;
   const proofCount = storeFilteredOrders.reduce((s, o) => s + o.pix_proofs.length, 0);
 
   const filteredOrders = useMemo(() => {
@@ -185,6 +186,7 @@ export default function AdminPage() {
         lastRefresh={lastRefresh}
         onRefresh={fetchData}
         loading={loading}
+        orders={orders}
       />
 
       <div className="admin-container">
@@ -202,68 +204,9 @@ export default function AdminPage() {
         <div className="admin-body">
 
         <main className="admin-main">
-          <h1 className="admin-greeting">Olá, Davi!</h1>
-          
-          {/* Metrics Overview */}
-          <div className="admin-metrics-primary">
-            <div className="admin-metric-card">
-              <div className="admin-metric-value">
-                <span className="material-symbols-outlined" style={{ color: 'var(--accent-primary)', fontSize: '12px' }}>circle</span>
-                {orders.length * 3}
-              </div>
-              <div className="admin-metric-label">Visitantes online agora</div>
-            </div>
-            <div className="admin-metric-card">
-              <div className="admin-metric-value">
-                <span className="material-symbols-outlined" style={{ color: 'var(--text-muted)', fontSize: '20px' }}>payments</span>
-                {formatCurrency(totalRevenue)}
-                <span className="admin-metric-sub" style={{ color: 'var(--text-primary)' }}>-%▴</span>
-              </div>
-              <div className="admin-metric-label">Valor em pedidos hoje</div>
-            </div>
-            <div className="admin-metric-card">
-              <div className="admin-metric-value">
-                <span className="material-symbols-outlined" style={{ color: 'var(--text-muted)', fontSize: '20px' }}>shopping_bag</span>
-                {orders.length}
-                <span className="admin-metric-sub" style={{ color: 'var(--text-primary)' }}>-%▴</span>
-              </div>
-              <div className="admin-metric-label">Pedidos hoje</div>
-            </div>
-          </div>
-
-          <div className="admin-metrics-secondary">
-            <div className="admin-metric-card" style={{ padding: '16px' }}>
-              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>shopping_cart</span>
-                {pendingCount}
-              </div>
-              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Carrinhos para recuperar</div>
-            </div>
-            <div className="admin-metric-card" style={{ padding: '16px' }}>
-              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span>
-                {pendingCount}
-              </div>
-              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Pagamentos pendentes</div>
-            </div>
-            <div className="admin-metric-card" style={{ padding: '16px' }}>
-              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>warning</span>
-                0
-              </div>
-              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Falhas em pagamentos</div>
-            </div>
-            <div className="admin-metric-card" style={{ padding: '16px' }}>
-              <div className="admin-metric-value" style={{ fontSize: '18px', color: 'var(--text-muted)', fontWeight: 400 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
-                0
-              </div>
-              <div className="admin-metric-label" style={{ fontSize: '11px' }}>Com estoque baixo</div>
-            </div>
-          </div>
-
           {/* Tab Content */}
-          {activeTab === 'zyfinancas' && <ZYFinancasTab orders={orders} />}
+          {activeTab === 'dashboard' && <DashboardTab orders={storeFilteredOrders} />}
+          {activeTab === 'zyfinancas' && <ZYFinancasTab orders={storeFilteredOrders} />}
           {activeTab === 'ranking' && <RankingTab orders={orders} />}
           {activeTab === 'crm' && <CRMTab stores={stores} />}
 
@@ -333,9 +276,16 @@ export default function AdminPage() {
                             <td>{formatDate(order.created_at)}</td>
                             <td>{order.customer_email}</td>
                             <td>
-                              <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)' }}>
-                                {order.store?.source_id ?? 'N/A'}
-                              </span>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)', display: 'inline-block', width: 'fit-content' }}>
+                                  {order.store?.source_id_1 ?? 'N/A'}
+                                </span>
+                                {order.store?.source_id_2 && (
+                                  <span style={{ fontSize: '11px', padding: '2px 8px', backgroundColor: 'var(--md-primary-light)', color: 'var(--md-primary)', display: 'inline-block', width: 'fit-content' }}>
+                                    {order.store.source_id_2}
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td style={{ fontWeight: '700' }}>{formatCurrency(order.amount)}</td>
                             <td>

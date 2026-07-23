@@ -8,7 +8,8 @@ export async function GET() {
       .select(`
         id,
         name,
-        source_id,
+        source_id_1,
+        source_id_2,
         active,
         created_at,
         orders (count)
@@ -30,15 +31,22 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, source_id } = body;
+    const { name, source_id_1, source_id_2 } = body;
 
-    if (!name || !source_id) {
-      return NextResponse.json({ error: 'Name and source_id are required' }, { status: 400 });
+    if (!name || !source_id_1) {
+      return NextResponse.json({ error: 'Name and source_id_1 are required' }, { status: 400 });
     }
+
+    const payload = { 
+      name, 
+      source_id_1, 
+      active: true,
+      ...(source_id_2 && { source_id_2 })
+    };
 
     const { data: store, error } = await supabase
       .from('stores')
-      .insert([{ name, source_id, active: true }])
+      .insert([payload])
       .select()
       .single();
 

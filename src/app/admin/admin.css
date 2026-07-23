@@ -11,19 +11,19 @@
 .admin-container {
   display: flex;
   flex: 1;
-  height: calc(100vh - 56px);
+  height: calc(100vh - 68px);
   overflow: hidden;
 }
 
 /* ========== DARK TOPBAR ========== */
 .admin-red-topbar {
-  height: 56px;
+  height: 68px;
   background: var(--topbar-bg);
   color: var(--topbar-text);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 24px;
   position: sticky;
   top: 0;
   z-index: 500;
@@ -38,16 +38,16 @@
 }
 
 .topbar-logo-img {
-  height: 28px;
-  width: 28px;
+  height: 34px;
+  width: 34px;
   object-fit: contain;
 }
 
 .topbar-brand-title {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  font-family: var(--font-brand);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
   color: var(--topbar-text);
   text-transform: uppercase;
 }
@@ -56,12 +56,12 @@
 .topbar-search-container {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: var(--topbar-search-bg);
   border: 1px solid var(--topbar-search-border);
-  padding: 6px 12px;
+  padding: 8px 16px;
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
   border-radius: var(--radius-md);
   transition: border-color 0.2s, background-color 0.2s;
 }
@@ -72,7 +72,7 @@
 }
 
 .topbar-search-icon {
-  font-size: 18px;
+  font-size: 20px;
   color: var(--topbar-text-muted);
 }
 
@@ -81,7 +81,7 @@
   background: transparent;
   border: none;
   color: var(--topbar-text);
-  font-size: 13px;
+  font-size: 14px;
   font-family: inherit;
   outline: none;
 }
@@ -114,9 +114,9 @@
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--topbar-search-border);
   color: var(--topbar-text-muted);
-  font-size: 10px;
-  font-family: monospace;
-  padding: 2px 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 3px 8px;
   border-radius: var(--radius-sm);
   user-select: none;
 }
@@ -132,8 +132,8 @@
   background: transparent;
   border: none;
   color: var(--topbar-text-muted);
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,15 +229,16 @@
 }
 
 .topbar-profile-avatar {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   background: var(--accent-primary);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 700;
   font-weight: 700;
   border-radius: var(--radius-sm);
   cursor: pointer;
