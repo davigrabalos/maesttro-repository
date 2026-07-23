@@ -29,38 +29,59 @@ export default async function ProfilePage() {
 
   return (
     <div style={{ backgroundColor: '#F5F6F8', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header simples para poder voltar */}
-      <header style={{ backgroundColor: '#fff', padding: '16px 24px', borderBottom: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Link href="/admin" style={{ display: 'flex', alignItems: 'center', color: '#374151', textDecoration: 'none', fontWeight: 600 }}>
-          <span className="material-symbols-outlined" style={{ marginRight: '8px' }}>arrow_back</span>
-          Voltar ao Painel
-        </Link>
-      </header>
-
-      <main style={{ flex: 1, padding: '40px 24px', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '100%', maxWidth: '600px', backgroundColor: '#fff', padding: '32px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>Meu Perfil</h1>
-          <p style={{ color: '#6B7280', fontSize: '14px', marginBottom: '32px' }}>
+      
+      {/* Header com Gradiente Animado (estilo Maesttro) */}
+      <div style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #172554 100%)',
+        padding: '32px 24px 120px 24px', // Espaço extra embaixo para o card sobrepor
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+          <Link href="/admin" style={{ display: 'inline-flex', alignItems: 'center', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500, fontSize: '14px', transition: 'color 0.2s', marginBottom: '24px' }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.8)'}
+          >
+            <span className="material-symbols-outlined" style={{ marginRight: '6px', fontSize: '18px' }}>arrow_back</span>
+            Voltar ao Painel
+          </Link>
+          <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', margin: 0 }}>Meu Perfil</h1>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px', marginTop: '8px' }}>
             Gerencie suas informações pessoais e visualize os detalhes do seu workspace.
           </p>
+        </div>
+      </div>
+
+      <main style={{ flex: 1, padding: '0 24px 60px 24px', display: 'flex', justifyContent: 'center', marginTop: '-80px' }}>
+        <div style={{ 
+          width: '100%', 
+          maxWidth: '800px', 
+          backgroundColor: '#fff', 
+          padding: '40px', 
+          borderRadius: '16px', 
+          boxShadow: '0 10px 25px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.02)',
+          border: '1px solid rgba(0,0,0,0.05)'
+        }}>
 
           <form action={updateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
             {/* Foto e Workspace */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '24px', padding: '24px', backgroundColor: '#F9FAFB', borderRadius: '12px', border: '1px dashed #E5E7EB' }}>
               <div style={{
                 width: '80px', height: '80px', borderRadius: '50%', backgroundColor: '#E5E7EB',
                 backgroundImage: profile?.avatar_url ? `url(${profile.avatar_url})` : 'none',
                 backgroundSize: 'cover', backgroundPosition: 'center',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                border: '2px solid #fff'
               }}>
                 {!profile?.avatar_url && (profile?.full_name ? profile.full_name.substring(0, 2).toUpperCase() : 'AD')}
               </div>
               <div>
                 <div style={{ fontSize: '12px', fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Workspace Atual
+                  Workspace Logado
                 </div>
-                <div style={{ fontSize: '18px', fontWeight: 700, color: '#111827', marginTop: '4px' }}>
+                <div style={{ fontSize: '20px', fontWeight: 700, color: '#111827', marginTop: '4px' }}>
                   {workspaceName}
                 </div>
               </div>
@@ -98,21 +119,23 @@ export default async function ProfilePage() {
               />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
               <button 
                 type="submit"
                 style={{
-                  padding: '12px 24px',
-                  backgroundColor: '#2563EB',
+                  padding: '14px 28px',
+                  backgroundColor: '#111827', // Botão escuro padrão Maesttro
                   color: '#fff',
                   border: 'none',
                   borderRadius: '8px',
                   fontWeight: 600,
+                  fontSize: '14px',
                   cursor: 'pointer',
-                  transition: 'background-color 0.2s'
+                  transition: 'background-color 0.2s, transform 0.1s',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1D4ED8'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2563EB'}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#1f2937'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#111827'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
                 Salvar Alterações
               </button>
@@ -148,7 +171,7 @@ export default async function ProfilePage() {
                 onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#fff'}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>logout</span>
-                Sair da Conta
+                Encerrar Sessão
               </button>
             </form>
           </div>
