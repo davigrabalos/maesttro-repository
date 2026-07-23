@@ -44,7 +44,6 @@ export async function createStore(formData: FormData) {
   }
 
   revalidatePath('/admin');
-  return { success: true };
 }
 
 export async function updateProfile(formData: FormData) {
@@ -69,7 +68,6 @@ export async function updateProfile(formData: FormData) {
   if (error) throw new Error('Erro ao atualizar perfil');
 
   revalidatePath('/admin', 'layout');
-  return { success: true };
 }
 
 export async function signOut() {

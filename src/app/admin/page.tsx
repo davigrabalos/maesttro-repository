@@ -73,7 +73,7 @@ function formatDate(dateStr: string) {
   }).format(new Date(dateStr));
 }
 
-export type TabId = 'dashboard' | 'orders' | 'approved' | 'zyfinancas' | 'ranking' | 'crm' | 'notes';
+export type TabId = 'dashboard' | 'orders' | 'approved' | 'zyfinancas' | 'ranking' | 'crm' | 'create_store' | 'notes';
 
 export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);

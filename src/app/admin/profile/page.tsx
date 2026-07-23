@@ -25,7 +25,8 @@ export default async function ProfilePage() {
     .eq('user_id', user.id)
     .single();
 
-  const workspaceName = workspaceUser?.workspaces?.name || 'Meu Workspace';
+  const rawWs = workspaceUser?.workspaces as any;
+  const workspaceName = (Array.isArray(rawWs) ? rawWs[0]?.name : rawWs?.name) || 'Meu Workspace';
 
   return (
     <div style={{ backgroundColor: '#F5F6F8', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -38,10 +39,7 @@ export default async function ProfilePage() {
         flexDirection: 'column',
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-          <Link href="/admin" style={{ display: 'inline-flex', alignItems: 'center', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500, fontSize: '14px', transition: 'color 0.2s', marginBottom: '24px' }}
-            onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
-            onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.8)'}
-          >
+          <Link href="/admin" className="link-profile-back" style={{ display: 'inline-flex', alignItems: 'center', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500, fontSize: '14px', transition: 'color 0.2s', marginBottom: '24px' }}>
             <span className="material-symbols-outlined" style={{ marginRight: '6px', fontSize: '18px' }}>arrow_back</span>
             Voltar ao Painel
           </Link>
@@ -122,9 +120,10 @@ export default async function ProfilePage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
               <button 
                 type="submit"
+                className="btn-profile-primary"
                 style={{
                   padding: '14px 28px',
-                  backgroundColor: '#111827', // Botão escuro padrão Maesttro
+                  backgroundColor: '#111827',
                   color: '#fff',
                   border: 'none',
                   borderRadius: '8px',
@@ -134,8 +133,6 @@ export default async function ProfilePage() {
                   transition: 'background-color 0.2s, transform 0.1s',
                   boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
                 }}
-                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#1f2937'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#111827'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
                 Salvar Alterações
               </button>
@@ -154,6 +151,7 @@ export default async function ProfilePage() {
             <form action={signOut}>
               <button 
                 type="submit"
+                className="btn-profile-logout"
                 style={{
                   padding: '10px 16px',
                   backgroundColor: '#fff',
@@ -167,8 +165,6 @@ export default async function ProfilePage() {
                   gap: '8px',
                   transition: 'background-color 0.2s'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FEF2F2'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#fff'}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>logout</span>
                 Encerrar Sessão

@@ -345,3 +345,18 @@ button:disabled {
   0% { transform: translateY(110vh) rotate(0deg); }
   100% { transform: translateY(-20vh) rotate(360deg); }
 }
+
+/* Profile Page Utilities */
+.link-profile-back:hover {
+  color: #ffffff !important;
+}
+
+.btn-profile-primary:hover {
+  background-color: #1f2937 !important;
+  transform: translateY(-1px);
+}
+
+.btn-profile-logout:hover {
+  background-color: #FEF2F2 !important;
+}
+
