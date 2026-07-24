@@ -6,10 +6,11 @@ import { login, signInWithGoogle } from './actions';
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string, message?: string }>;
 }) {
   const resolvedParams = await searchParams;
   const errorMsg = resolvedParams.error;
+  const successMsg = resolvedParams.message;
 
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'var(--font-body, "Google Sans", sans-serif)' }}>
@@ -98,9 +99,20 @@ export default async function LoginPage({
               backgroundColor: '#FEE2E2', color: '#DC2626',
               padding: '12px 14px', borderRadius: '8px',
               marginBottom: '20px', fontSize: '13px',
-              border: '1px solid #FECACA',
+              border: '1px solid #FCA5A5'
             }}>
               {errorMsg}
+            </div>
+          )}
+
+          {successMsg && (
+            <div style={{
+              backgroundColor: '#D1FAE5', color: '#065F46',
+              padding: '12px 14px', borderRadius: '8px',
+              marginBottom: '20px', fontSize: '13px',
+              border: '1px solid #6EE7B7'
+            }}>
+              {successMsg}
             </div>
           )}
 

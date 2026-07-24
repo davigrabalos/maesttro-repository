@@ -30,20 +30,25 @@ export async function signup(formData: FormData) {
   const password = formData.get('password') as string;
   const name = formData.get('name') as string;
 
-  const { error } = await supabase.auth.signUp({
+  const { error, data } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         full_name: name,
-        avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+        avatar_url: null, // Will use initials by default or allow user to select
       },
-      // In production, configure an email template or turn off email confirmation for seamless onboarding
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
     },
   });
 
   if (error) {
-    return redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    return redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (data?.user && data?.session === null) {
+    // Email confirmation required
+    return redirect('/login?message=Verifique+seu+e-mail+para+continuar.');
   }
 
   // Se não exigir confirmação de e-mail, já loga direto e redireciona
