@@ -190,11 +190,7 @@ export function AdminHeader({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'box-shadow 0.2s, transform 0.2s'
-        }}
-        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.2)'; }}
-        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}
-        >
+        }}>
           {!profile?.profile?.avatar_url ? (
             <span>{profile?.profile?.full_name ? profile.profile.full_name.substring(0, 2).toUpperCase() : 'AD'}</span>
           ) : null}
