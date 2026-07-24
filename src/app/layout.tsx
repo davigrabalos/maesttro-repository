@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   title: "Maesttro Checkout",
   description: "Checkout de alta conversão",
   icons: {
-    icon: "/images/ICON.png",
-    shortcut: "/images/ICON.png",
-    apple: "/images/ICON.png",
+    icon: "/images/icon.png",
+    shortcut: "/images/icon.png",
+    apple: "/images/icon.png",
   },
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         {/* Favicon */}
-        <link rel="icon" href="/images/ICON.png" type="image/png" />
+        <link rel="icon" href="/images/icon.png" type="image/png" />
 
         {/* Fontes do Google - carregamento prioritário via <link> direto no HTML */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

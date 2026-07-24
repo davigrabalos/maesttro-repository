@@ -30,7 +30,7 @@ export default async function CheckoutPage({
           {/* Logo da Marca Maesttro */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
-            src="/images/LOGO.png" 
+            src="/images/logo.png" 
             alt="Maesttro Logo" 
             style={{ height: '40px', objectFit: 'contain' }} 
           />

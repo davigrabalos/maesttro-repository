@@ -42,7 +42,7 @@ export default async function ConfirmacaoPage({ params, searchParams }: PageProp
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/LOGO.png" alt="Maesttro" style={{ height: '40px', objectFit: 'contain' }} />
+          <img src="/images/logo.png" alt="Maesttro" style={{ height: '40px', objectFit: 'contain' }} />
         </div>
 
         {/* Client Component with Polling & Confetti */}
