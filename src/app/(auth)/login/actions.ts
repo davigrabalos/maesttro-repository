@@ -19,8 +19,8 @@ export async function login(formData: FormData) {
     return redirect('/login?error=Email ou senha incorretos');
   }
 
-  revalidatePath('/admin', 'layout');
-  redirect('/admin');
+  revalidatePath('/home', 'layout');
+  redirect('/home');
 }
 
 export async function signup(formData: FormData) {
@@ -52,8 +52,8 @@ export async function signup(formData: FormData) {
   }
 
   // Se não exigir confirmação de e-mail, já loga direto e redireciona
-  revalidatePath('/admin', 'layout');
-  redirect('/admin');
+  revalidatePath('/home', 'layout');
+  redirect('/home');
 }
 
 export async function signInWithGoogle() {

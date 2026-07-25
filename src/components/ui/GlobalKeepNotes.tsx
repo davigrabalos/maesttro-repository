@@ -115,7 +115,7 @@ export function GlobalKeepNotes() {
   const pathname = usePathname();
 
   if (!mounted) return null;
-  if (!pathname.startsWith('/admin')) return null;
+  if (!pathname.startsWith('/home')) return null;
 
   const stylePosition: React.CSSProperties = position
     ? { left: `${position.x}px`, top: `${position.y}px`, right: 'auto', bottom: 'auto' }

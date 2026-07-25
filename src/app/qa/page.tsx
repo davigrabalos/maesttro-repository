@@ -20,7 +20,7 @@ export default function QAPage() {
       <p style={{ color: 'var(--text-secondary)', maxWidth: '500px', textAlign: 'center' }}>
         Esta página está pronta para receber a central de ajuda e documentação do sistema.
       </p>
-      <Link href="/admin" className="md-btn md-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: 'var(--radius-md)' }}>
+      <Link href="/home" className="md-btn md-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: 'var(--radius-md)' }}>
         <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
         Voltar para o Painel Admin
       </Link>
