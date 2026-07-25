@@ -112,6 +112,7 @@ export default function PedidosPage() {
                 <th>Data</th>
                 <th>E-mail</th>
                 <th>Loja</th>
+                <th>Itens</th>
                 <th>Valor</th>
                 <th>Método</th>
                 <th>Status</th>
@@ -141,6 +142,29 @@ export default function PedidosPage() {
                           </span>
                         )}
                       </div>
+                    </td>
+                    <td>
+                      {order.order_items && order.order_items.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {order.order_items.map((item: any) => (
+                            <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <div style={{ width: '20px', height: '20px', backgroundColor: 'var(--md-surface)', borderRadius: '4px', overflow: 'hidden' }}>
+                                {item.image_url ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={item.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                  <span className="material-symbols-outlined" style={{ fontSize: '12px', color: 'var(--md-text-secondary)', display: 'block', padding: '4px' }}>image</span>
+                                )}
+                              </div>
+                              <span style={{ fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '120px' }} title={item.product_name}>
+                                {item.quantity}x {item.product_name}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span style={{ fontSize: '11px', color: 'var(--md-text-secondary)' }}>Nenhum item salvo</span>
+                      )}
                     </td>
                     <td style={{ fontWeight: '700' }}>{formatCurrency(order.amount)}</td>
                     <td>

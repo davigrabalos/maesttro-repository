@@ -25,6 +25,13 @@ export interface Order {
   created_at: string;
   store: Store | null;
   pix_proofs: PixProof[];
+  order_items?: {
+    id: string;
+    product_name: string;
+    quantity: number;
+    total_price: number;
+    image_url: string;
+  }[];
 }
 
 export interface StoreData {

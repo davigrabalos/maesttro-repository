@@ -27,6 +27,13 @@ export async function GET() {
           id,
           file_url,
           uploaded_at
+        ),
+        order_items (
+          id,
+          product_name,
+          quantity,
+          total_price,
+          image_url
         )
       `)
       .order('created_at', { ascending: false })

@@ -1,62 +1,83 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Usamos Service Role para ignorar RLS na inserção da Ordem a partir de um usuário não logado.
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { source, email, phone, amount } = data;
+    const { session_id, customer_name, customer_email, customer_phone, payment_method } = data;
 
-    if (!source || !email || !phone || !amount) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!session_id || !customer_email || !customer_phone) {
+      return NextResponse.json({ error: 'Faltam campos obrigatórios' }, { status: 400 });
     }
 
-    // 1. Fetch store by source ID (or auto-create if missing)
-    let { data: store, error: storeError } = await supabase
-      .from('stores')
-      .select('id')
-      .eq('source_id', source)
-      .maybeSingle();
+    // 1. Fetch Session
+    const { data: session, error: sessionError } = await supabaseAdmin
+      .from('checkout_sessions')
+      .select('*')
+      .eq('id', session_id)
+      .single();
 
-    if (!store) {
-      // Auto-create store if source doesn't exist yet
-      const { data: newStore, error: createStoreError } = await supabase
-        .from('stores')
-        .insert({
-          name: `Loja ${source}`,
-          source_id: source,
-          active: true
-        })
-        .select('id')
-        .single();
-
-      if (createStoreError || !newStore) {
-        console.error('Error auto-creating store:', createStoreError);
-        return NextResponse.json({ error: 'Store not found and could not be created' }, { status: 404 });
-      }
-      store = newStore;
+    if (sessionError || !session || session.status !== 'active') {
+      return NextResponse.json({ error: 'Sessão inválida ou expirada.' }, { status: 404 });
     }
 
-    // 2. Insert order
-    const { data: order, error: orderError } = await supabase
+    // 2. Insert Order
+    const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
       .insert({
-        store_id: store.id,
-        customer_email: email,
-        customer_phone: phone,
-        amount: amount,
+        workspace_id: session.workspace_id,
+        customer_email: customer_email,
+        customer_phone: customer_phone,
+        amount: session.total_amount,
         status: 'pending',
-        payment_method: 'pix'
+        payment_method: payment_method || 'pix'
       })
       .select('id')
       .single();
 
     if (orderError || !order) {
       console.error('Error creating order:', orderError);
-      return NextResponse.json({ error: 'Error creating order' }, { status: 500 });
+      return NextResponse.json({ error: 'Erro ao criar pedido' }, { status: 500 });
     }
 
-    // Return the created order ID
-    return NextResponse.json({ success: true, orderId: order.id });
+    // 3. Create Order Items from Cart Items
+    const cartItems = session.cart_items as any[];
+    if (cartItems && cartItems.length > 0) {
+      const orderItemsToInsert = cartItems.map(item => ({
+        order_id: order.id,
+        product_id: item.product_id,
+        variant_id: item.variant_id,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        total_price: item.total_price,
+        product_name: item.name,
+        image_url: item.image_url
+      }));
+
+      const { error: itemsError } = await supabaseAdmin
+        .from('order_items')
+        .insert(orderItemsToInsert);
+
+      if (itemsError) {
+        console.error('Error creating order items:', itemsError);
+        // We continue so we don't break the payment loop, but this is bad.
+      }
+    }
+
+    // 4. Update session status
+    await supabaseAdmin
+      .from('checkout_sessions')
+      .update({ status: 'converted', customer_info: { name: customer_name, email: customer_email, phone: customer_phone } })
+      .eq('id', session_id);
+
+    // Return the created order ID to redirect to status
+    return NextResponse.json({ success: true, order_id: order.id });
 
   } catch (error) {
     console.error('API Error:', error);
