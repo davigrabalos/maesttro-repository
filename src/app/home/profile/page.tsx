@@ -31,14 +31,25 @@ export default async function ProfilePage() {
   const workspaceId = workspaceUser?.workspace_id;
 
   // Gamification Metrics
-  const [{ count: storesCount }, { count: ordersCount }] = await Promise.all([
-    supabase.from('stores').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
-    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
-  ]);
+  let storesCount = 0, ordersCount = 0, pixPaidCount = 0;
+  let maxOrder = null, minOrder = null;
 
-  const { data: maxOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: false }).limit(1);
-  const { data: minOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: true }).limit(1);
-  const { count: pixPaidCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId).eq('payment_method', 'pix').eq('status', 'paid');
+  if (workspaceId) {
+    const [resStores, resOrders] = await Promise.all([
+      supabase.from('stores').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
+      supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
+    ]);
+    storesCount = resStores.count || 0;
+    ordersCount = resOrders.count || 0;
+
+    const { data: mMaxOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: false }).limit(1);
+    const { data: mMinOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: true }).limit(1);
+    const { count: mPixPaidCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId).eq('payment_method', 'pix').eq('status', 'paid');
+    
+    maxOrder = mMaxOrder;
+    minOrder = mMinOrder;
+    pixPaidCount = mPixPaidCount || 0;
+  }
 
   const achievements = [
     { id: 'start', title: 'O Começo de Tudo', desc: 'Cadastrou a primeira loja.', unlocked: (storesCount || 0) >= 1, icon: 'storefront' },

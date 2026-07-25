@@ -21,13 +21,25 @@ export async function GET() {
     const workspaceId = workspaceUser?.workspace_id;
 
     // Calc achievements
-    const [{ count: storesCount }, { count: ordersCount }] = await Promise.all([
-      supabase.from('stores').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
-      supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
-    ]);
-    const { data: maxOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: false }).limit(1);
-    const { data: minOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: true }).limit(1);
-    const { count: pixPaidCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId).eq('payment_method', 'pix').eq('status', 'paid');
+    let storesCount = 0, ordersCount = 0, pixPaidCount = 0;
+    let maxOrder = null, minOrder = null;
+
+    if (workspaceId) {
+      const [resStores, resOrders] = await Promise.all([
+        supabase.from('stores').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
+        supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId),
+      ]);
+      storesCount = resStores.count || 0;
+      ordersCount = resOrders.count || 0;
+
+      const { data: mMaxOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: false }).limit(1);
+      const { data: mMinOrder } = await supabase.from('orders').select('amount').eq('workspace_id', workspaceId).order('amount', { ascending: true }).limit(1);
+      const { count: mPixPaidCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('workspace_id', workspaceId).eq('payment_method', 'pix').eq('status', 'paid');
+      
+      maxOrder = mMaxOrder;
+      minOrder = mMinOrder;
+      pixPaidCount = mPixPaidCount || 0;
+    }
 
     // Get profile to check current level
     const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
