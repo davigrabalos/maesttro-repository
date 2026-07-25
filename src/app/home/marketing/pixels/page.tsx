@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function PixelsPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Pixels de Rastreamento" 
+        description="Instale o Facebook Pixel, Google Analytics ou Tiktok Pixel no checkout." 
+      />
+      <EmptyState 
+        icon="track_changes"
+        title="Nenhum pixel configurado"
+        description="Os pixels ajudam a rastrear eventos como PageView e Purchase para otimizar seus anúncios."
+        actionLabel="Adicionar Pixel"
+        actionHref="#"
+      />
     </div>
   );
 }

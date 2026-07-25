@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function MetatagsPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Meta Tags (SEO)" 
+        description="Configure o título e a descrição que aparecem quando você compartilha seu link." 
+      />
+      <EmptyState 
+        icon="tag"
+        title="Nenhuma Meta Tag customizada"
+        description="Sem meta tags, as redes sociais puxarão informações genéricas do sistema."
+        actionLabel="Configurar Tags Globais"
+        actionHref="#"
+      />
     </div>
   );
 }

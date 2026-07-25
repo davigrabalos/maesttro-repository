@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function ColecoesPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Coleções" 
+        description="Agrupe seus produtos em coleções para facilitar a navegação." 
+      />
+      <EmptyState 
+        icon="category"
+        title="Nenhuma coleção criada"
+        description="As coleções ajudam os clientes a encontrar produtos relacionados mais facilmente."
+        actionLabel="Criar Coleção"
+        actionHref="#"
+      />
     </div>
   );
 }

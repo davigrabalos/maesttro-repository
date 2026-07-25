@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function BotoesPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Botões de Compra" 
+        description="Gere botões HTML para incorporar o checkout Maesttro no seu próprio site." 
+      />
+      <EmptyState 
+        icon="smart_button"
+        title="Nenhum botão configurado"
+        description="Crie seu primeiro botão de compra para vender diretamente das suas Landing Pages."
+        actionLabel="Criar Botão"
+        actionHref="#"
+      />
     </div>
   );
 }

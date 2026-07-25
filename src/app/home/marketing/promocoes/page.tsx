@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function PromocoesPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Promoções Agendadas" 
+        description="Agende descontos de produtos específicos para datas sazonais." 
+      />
+      <EmptyState 
+        icon="event_available"
+        title="Nenhuma promoção agendada"
+        description="Crie campanhas como Black Friday ou Natal e os preços mudarão automaticamente."
+        actionLabel="Agendar Promoção"
+        actionHref="#"
+      />
     </div>
   );
 }

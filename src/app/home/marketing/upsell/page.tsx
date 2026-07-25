@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function UpsellPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="1-Click Upsell" 
+        description="Ofereça um produto extra imediatamente após o pagamento aprovado." 
+      />
+      <EmptyState 
+        icon="rocket_launch"
+        title="Nenhum Upsell ativo"
+        description="Aproveite o momento de compra para vender mais sem precisar que o cliente digite os dados do cartão novamente."
+        actionLabel="Criar Funil de Upsell"
+        actionHref="#"
+      />
     </div>
   );
 }

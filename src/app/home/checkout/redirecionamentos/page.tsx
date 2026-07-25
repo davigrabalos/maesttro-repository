@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function RedirecionamentosPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Redirecionamentos" 
+        description="Mapeie para onde o usuário deve ir após a aprovação ou recusa do pagamento." 
+      />
+      <EmptyState 
+        icon="alt_route"
+        title="Nenhum redirecionamento ativo"
+        description="Configure páginas de 'Obrigado' personalizadas para Pix, Cartão e Boleto."
+        actionLabel="Adicionar Rota"
+        actionHref="#"
+      />
     </div>
   );
 }

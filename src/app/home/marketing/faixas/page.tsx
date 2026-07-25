@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function FaixasPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Faixas de Desconto" 
+        description="Ofereça descontos progressivos por quantidade de itens no carrinho." 
+      />
+      <EmptyState 
+        icon="stacked_bar_chart"
+        title="Nenhuma faixa de desconto"
+        description="Ex: Compre 2 leve 10% OFF, Compre 3 leve 15% OFF."
+        actionLabel="Criar Faixas"
+        actionHref="#"
+      />
     </div>
   );
 }

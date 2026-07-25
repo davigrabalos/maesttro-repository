@@ -1,12 +1,23 @@
 'use client';
+
 import React from 'react';
+import { PageHeader } from '../../../../components/ui/PageHeader';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 export default function GruposPage() {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', opacity: 0.7 }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '48px', marginBottom: '16px' }}>construction</span>
-      <h2>Página em Construção</h2>
-      <p>Em breve esta funcionalidade estará disponível.</p>
+    <div>
+      <PageHeader 
+        title="Grupos de Clientes" 
+        description="Segmente seus clientes (VIP, Revendedores, Atacado) para campanhas e descontos específicos." 
+      />
+      <EmptyState 
+        icon="groups"
+        title="Nenhum grupo criado"
+        description="Crie grupos para atribuir descontos automáticos no checkout."
+        actionLabel="Criar Segmento"
+        actionHref="#"
+      />
     </div>
   );
 }
