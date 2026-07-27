@@ -225,6 +225,16 @@ export function PaymentMethodSelector({ orderId }: PaymentMethodSelectorProps) {
       {/* Credit Card Panel */}
       {selected === 'credit_card' && (
         <div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '16px', padding: '12px', backgroundColor: '#F9FAFB', border: '1px solid var(--md-border)', borderRadius: '8px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/visa-brand-symbol-1000x668.png" alt="Visa" style={{ height: '24px', objectFit: 'contain' }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/ma_symbol_opt_45_3x.png" alt="Mastercard" style={{ height: '24px', objectFit: 'contain' }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/AXP_BlueBoxLogo_Alternate_REGULARscale_RGB_DIGITAL_700x700.png" alt="Amex" style={{ height: '24px', objectFit: 'contain' }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/ELO_Marca_principal_CMYK-02.png" alt="Elo" style={{ height: '24px', objectFit: 'contain' }} />
+          </div>
           <Input label="Número do Cartão" type="text" />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <Input label="Validade (MM/AA)" type="text" />

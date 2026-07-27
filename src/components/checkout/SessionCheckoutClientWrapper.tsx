@@ -141,7 +141,18 @@ export function SessionCheckoutClientWrapper({ session, settings }: { session: a
             </div>
 
             {paymentMethod === 'credit_card' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px', border: '1px solid var(--md-border)', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px', border: '1px solid var(--md-border)', borderRadius: '8px', backgroundColor: '#F9FAFB' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/visa-brand-symbol-1000x668.png" alt="Visa" style={{ height: '24px', objectFit: 'contain' }} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/ma_symbol_opt_45_3x.png" alt="Mastercard" style={{ height: '24px', objectFit: 'contain' }} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/AXP_BlueBoxLogo_Alternate_REGULARscale_RGB_DIGITAL_700x700.png" alt="Amex" style={{ height: '24px', objectFit: 'contain' }} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/ELO_Marca_principal_CMYK-02.png" alt="Elo" style={{ height: '24px', objectFit: 'contain' }} />
+                </div>
+                <div style={{ height: '1px', backgroundColor: 'var(--md-border)', width: '100%' }} />
                 <span style={{ fontSize: '13px', color: 'var(--md-text-secondary)', textAlign: 'center' }}>
                   Simulação! Os dados reais do cartão seriam preenchidos aqui.
                 </span>
